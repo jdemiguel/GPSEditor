@@ -276,7 +276,7 @@ public class PanelCoeficientes extends JLayeredPane implements ChartMouseListene
 			}
 			if (configuracion.isMostrarLeyenda()) {
 				double anchoTotal = plot.getDomainAxis().getUpperBound() -  plot.getDomainAxis().getLowerBound(); 
-				DatosSegmentoBean datosSegmento = datosActividad.getDatosSegmentoBean();
+				DatosSegmentoBean datosSegmento = datosActividad.getDatosSegmentoActual();
 				double posicionXLeyenda = segmentoMinimo;
 				if (segmentoMinimo > segmentos.size() / 2) {
 					posicionXLeyenda = segmentoMinimo - (anchoTotal / 10);
@@ -335,7 +335,7 @@ public class PanelCoeficientes extends JLayeredPane implements ChartMouseListene
 			annotationAlt.setText(" " + UtilidadesFormat.getIntegerFormat().format(trackPoint.getAltitud()) + " m ");
 			annotationAlt.setX(valorX);
 			annotationAlt.setY((plot.getRangeAxis().getUpperBound() + plot.getRangeAxis().getLowerBound() ) /2);
-			annotationPte.setText(" " + UtilidadesFormat.getPercentFormat().format(trackPoint.getPendiente()));
+			annotationPte.setText(" " + UtilidadesFormat.getPercentFormat().format(datosActividad.getPendiente(datosActividad.getPuntoSeleccionado())));
 			annotationPte.setX(valorX);
 			annotationPte.setY((14 * plot.getRangeAxis().getUpperBound() + 16 * plot.getRangeAxis().getLowerBound() ) /30);
 			annotationLine = new XYLineAnnotation(valorX, plot.getRangeAxis().getUpperBound(), valorX, plot.getRangeAxis().getLowerBound(), new BasicStroke(.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER), Color.BLACK);

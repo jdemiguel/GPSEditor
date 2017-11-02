@@ -71,7 +71,7 @@ public class Grafica{
 		int tamRango = datosActividad.getFinRango() - datosActividad.getInicioRango();
 		if (tamRango != this.tamRangoAnterior)  {
 			this.tamRangoAnterior = tamRango;
-			int nuevaSuavidad =  (int) Math.round((10f * (double)tamRango) / (double)datosActividad.getTrack().getPuntos().size());
+			int nuevaSuavidad =  (int) Math.round((10000f * (double)tamRango) / (double)datosActividad.getTrack().getPuntos().size());
 			if (nuevaSuavidad > 9) nuevaSuavidad = 9;
 			if (nuevaSuavidad != configuracion.getAjusteSuavidad())  {
 				configuracion.setAjusteSuavidad(nuevaSuavidad);

@@ -18,7 +18,6 @@ import aplicaciones.gpsedit.beans.Track;
 import aplicaciones.gpsedit.beans.TrackPoint;
 import aplicaciones.gpsedit.config.Configuracion;
 import aplicaciones.gpsedit.config.ConfiguracionSecciones;
-import aplicaciones.gpsedit.gps.TrackUtil;
 import aplicaciones.gpsedit.util.EjeX;
 import aplicaciones.gpsedit.util.UtilidadesFormat;
 import aplicaciones.gpsedit.util.UtilidadesMath;
@@ -32,6 +31,7 @@ public class DatosActividad {
 	DatosTodasGraficasBean datosGraficasTiempoAbs = null;
 	DatosTodasGraficasBean datosGraficasHora = null;
 	List<Seccion> seccionesAutomaticas = null;
+	DatosSegmentoBean datosTrack;
 	
 	public DatosActividad(Track track) {
 		this.actividadBean = new ActividadBean();
@@ -39,6 +39,173 @@ public class DatosActividad {
 		this.actividadBean.setInicioRango(0);
 		this.actividadBean.setFinRango(track.getPuntos().size() - 1);
 		this.actividadBean.setPuntoSeleccionado(0);
+		this.datosTrack = getDatos(0, track.getPuntos().size()-1);
+
+	}
+
+	
+	public DatosSegmentoBean getDatos(int inicio, int fin)  {
+		
+		List<TrackPoint> puntos = getTrack().getPuntos();
+		DatosSegmentoBean datosSegmento = new DatosSegmentoBean();
+		if (puntos.size() < 2) return datosSegmento;
+		
+		TrackPoint puntoInicio = puntos.get(inicio);
+		TrackPoint puntoFin = puntos.get(fin);
+		
+		long tiempoMovimiento = 0 ;
+		long tiempoAbsoluto = 0;
+		long cadenciaMed = 0;
+		long cadenciaMax = 0;
+		long cadenciaMin = 10000;
+		long potenciaMed = 0;
+		long potenciaMax = 0;
+		long potenciaMin = 10000;
+		long numElementosCadenciaMed = 0;
+		long numElementosHRMed = 0;
+		long numElementosPotenciaMed = 0;
+		long numElementosAltitudMed = 0;
+		long numElementosVelocidadMed = 0;
+		long hrMed = 0;
+		long hrMax = 0;
+		long hrMin = 10000;
+		double velocidadMed = 0;
+		double velocidadMax = 0;
+		double velocidadMin = 10000;
+		double pendienteMax = 0;
+		double pendienteMin = 10000;
+		double altitudMed = 0;
+		double altitudMax = 0;
+		double altitudMin = 10000;
+		double desnivelAcumulado = 0;
+		double longitud;
+
+		long distanciaInicial = Math.round(Math.floor(puntoInicio.getDistancia()));
+		long distanciaFinal = Math.round(Math.floor(puntoFin.getDistancia()));
+
+		long tiempoInicial = puntoInicio.getTiempoMovimiento();
+		long tiempoFinal = puntoFin.getTiempoMovimiento();
+
+    	Date horaInicio = puntoInicio.getHora();
+    	Date horaFin = puntoFin.getHora();
+    	
+    	longitud = puntoFin.getDistancia() - puntoInicio.getDistancia();
+    	tiempoAbsoluto = puntoFin.getTiempoAbsoluto() - puntoInicio.getTiempoAbsoluto();
+    	tiempoMovimiento = puntoFin.getTiempoMovimiento() - puntoInicio.getTiempoMovimiento();
+    	
+    	for (int i = inicio; i <= fin; i++)  {
+    		TrackPoint punto = puntos.get(i);
+    		
+        	double altitud = punto.getAltitud();
+        	if (altitud > altitudMax) altitudMax = altitud;
+        	if (altitud < altitudMin && altitud > 0) altitudMin = altitud;
+
+        	long hr = punto.getHR();
+        	if (hr > hrMax) hrMax = hr;
+        	if (hr < hrMin && hr > 0) hrMin = hr;
+
+        	long cadencia = punto.getCadencia();
+        	if (cadencia > cadenciaMax) cadenciaMax = cadencia;
+        	if (cadencia < cadenciaMin) cadenciaMin = cadencia;
+
+        	long potencia = punto.getPotencia();
+        	if (potencia > potenciaMax) potenciaMax = potencia;
+        	if (potencia < potenciaMin) potenciaMin = potencia;
+        	
+        	potenciaMed += potencia;
+    		numElementosPotenciaMed++;
+        	
+        	if (cadencia > 0) {
+        		cadenciaMed += cadencia;
+        		numElementosCadenciaMed++;;
+        	}
+   			if (hr > 0) {
+	        	hrMed += hr;
+        		numElementosHRMed++;;
+        	}
+   			if (altitud > 0) {
+	        	altitudMed += altitud;
+        		numElementosAltitudMed++;;
+        	}
+   			numElementosVelocidadMed++;
+
+    		double pendiente = getPendiente(i);
+        	if (pendiente > pendienteMax) pendienteMax = pendiente;
+        	if (pendiente < pendienteMin) pendienteMin = pendiente;
+
+        	double velocidad = punto.getVelocidad();
+        	if (velocidad > velocidadMax) velocidadMax = velocidad;
+        	if (velocidad < velocidadMin) velocidadMin = velocidad;
+        	velocidadMed += velocidad;
+
+        	double desnivel = punto.getDesnivel();       	
+        	if (desnivel > 0) desnivelAcumulado += desnivel;
+        	
+    	}
+
+		double primeraAltitud = 0;
+		double ultimaAltitud = 0;
+		for (int index  = inicio; index <= fin; index++)  {
+			if (primeraAltitud == 0) primeraAltitud = puntos.get(index).getAltitud();
+			if (puntos.get(index).getAltitud() != 0) ultimaAltitud = puntos.get(index).getAltitud();
+		}
+		
+		double desnivelTotal = ultimaAltitud - primeraAltitud;
+		double pendienteMed = desnivelTotal / (double)longitud;
+
+		if (numElementosCadenciaMed > 0) cadenciaMed = Math.round(cadenciaMed / (double)numElementosCadenciaMed);
+        else cadenciaMed = 0;
+		if (numElementosPotenciaMed > 0) potenciaMed = Math.round(potenciaMed / (double)numElementosPotenciaMed);
+        else potenciaMed = 0;
+		if (numElementosHRMed > 0) hrMed = Math.round(hrMed / (double)numElementosHRMed);
+        else hrMed = 0;
+		if (numElementosAltitudMed > 0) altitudMed = Math.round(altitudMed / (double)numElementosAltitudMed);
+        else altitudMed = 0;
+		if (numElementosVelocidadMed > 0) velocidadMed = velocidadMed / (double)numElementosVelocidadMed;
+        else velocidadMed = 0;
+
+		if (altitudMin == 10000) altitudMin = 0;
+		if (hrMin == 10000) hrMin = 0;
+		if (cadenciaMin == 10000) cadenciaMin = 0;
+		if (velocidadMin == 10000) velocidadMin = 0;
+		if (pendienteMin == 10000) pendienteMin = 0;
+		if (potenciaMin == 10000) potenciaMin = 0;
+		
+		datosSegmento.setDistanciaInicial(distanciaInicial);
+		datosSegmento.setDistanciaFinal(distanciaFinal);
+		datosSegmento.setTiempoInicial(tiempoInicial);
+		datosSegmento.setTiempoFinal(tiempoFinal);
+		datosSegmento.setHoraInicio(horaInicio);
+		datosSegmento.setHoraFin(horaFin);
+		datosSegmento.setTiempoMovimiento(tiempoMovimiento);
+		datosSegmento.setTiempoAbsoluto(tiempoAbsoluto);
+		datosSegmento.setLongitud(longitud);
+		datosSegmento.setDesnivelTotal(desnivelTotal);
+		datosSegmento.setDesnivelAcumulado(desnivelAcumulado);
+		datosSegmento.setAltitudMax(altitudMax);
+		datosSegmento.setAltitudMed(altitudMed);
+		datosSegmento.setAltitudMin(altitudMin);
+		datosSegmento.setHrMed(hrMed);
+		datosSegmento.setHrMin(hrMin);
+		datosSegmento.setHrMax(hrMax);
+		datosSegmento.setCadenciaMed(cadenciaMed);
+		datosSegmento.setCadenciaMin(cadenciaMin);
+		datosSegmento.setCadenciaMax(cadenciaMax);
+		datosSegmento.setVelocidadMed(velocidadMed);
+		datosSegmento.setVelocidadMin(velocidadMin);
+		datosSegmento.setVelocidadMax(velocidadMax);
+		datosSegmento.setPasoMed(3600000.0 / velocidadMed);
+		datosSegmento.setPasoMin(3600000.0 / velocidadMin);
+		datosSegmento.setPasoMax(3600000.0 / velocidadMax);
+		datosSegmento.setPotenciaMed(potenciaMed);
+		datosSegmento.setPotenciaMin(potenciaMin);
+		datosSegmento.setPotenciaMax(potenciaMax);
+		
+		datosSegmento.setPendienteMed(pendienteMed);
+		datosSegmento.setPendienteMin(pendienteMin);
+		datosSegmento.setPendienteMax(pendienteMax);
+		
+		return datosSegmento;
 	}
 	
 	public List<Seccion> getSeccionesAutomaticas() {
@@ -88,10 +255,6 @@ public class DatosActividad {
 				if (seccion.getInicioRango() == 0) seccion.setInicioRango(index);
 				seccion.setFinRango(index);
 				seccion.getPuntos().add(punto);
-			}
-			for (int numSeccion = 0; numSeccion < numSecciones; numSeccion++) {
-				Seccion seccion = seccionesAutomaticas.get(numSeccion);
-				seccion.setDatos(TrackUtil.getDatos(seccion.getPuntos()));
 			}
 		}		
 		return seccionesAutomaticas;
@@ -207,6 +370,12 @@ public class DatosActividad {
 		if (datosGraficasHora == null) setDatosGrafica(ejeX);
 		return datosGraficasHora;
 	}
+	
+	public double getPendiente(int punto)  {
+		EjeX ejeX = EjeX.getInstanciaEjeDistancia();
+		UnivariateFunction pendientesInterpoladas = getDatosGrafica(ejeX).getDatosPendiente().getDatosSuavizados(9);
+		return pendientesInterpoladas.value(getValorX(getTrack().getPuntos().get(punto), ejeX)) / 100.0;
+	}
 
 	public List<SegmentoCoeficiente> getSegmentosCoeficienteAPMRango()  {
 		return getSegmentosCoeficienteAPM(getPuntoInicioRango().getDistancia(), getPuntoFinRango().getDistancia());
@@ -269,9 +438,9 @@ public class DatosActividad {
     	for (int i = 0; i< puntos.size(); i++)  {
     		TrackPoint punto = puntos.get(i);
         	double valorX = getValorX(punto, ejeX);
-        	if (punto.getAltitud() > 0 || getDatosSegmentoBean().getAltitudMed() == 0) datosGraficasBean.getDatosAltitud().addDato(valorX, punto.getAltitud());
+        	if (punto.getAltitud() > 0 || getDatosSegmentoActual().getAltitudMed() == 0) datosGraficasBean.getDatosAltitud().addDato(valorX, punto.getAltitud());
         	datosGraficasBean.getDatosHR().addDato(valorX, punto.getHR());
-        	datosGraficasBean.getDatosPendiente().addDato(valorX, punto.getPendiente() * 100.0);
+        	datosGraficasBean.getDatosPendiente().addDato(valorX, punto.getPendienteBruta() * 100.0);
         	datosGraficasBean.getDatosVelocidad().addDato(valorX, punto.getVelocidad());
         	datosGraficasBean.getDatosCadencia().addDato(valorX, punto.getCadencia());
         	datosGraficasBean.getDatosPaso().addDato(valorX, punto.getPaso() / 60000);
@@ -471,13 +640,8 @@ public class DatosActividad {
 		seccionesAutomaticas = null;
 	}
 	
-	public DatosSegmentoBean getDatosSegmentoBean()  {
-		DatosSegmentoBean datosSegmento = null;
-    	List<TrackPoint> puntos = getTrack().getPuntos();
-    	int inicioRango = getInicioRango();
-    	int finRango = getFinRango();
-    	
-    	datosSegmento = TrackUtil.getDatos(puntos.subList(inicioRango, finRango + 1));
+	public DatosSegmentoBean getDatosSegmentoActual()  {
+		DatosSegmentoBean datosSegmento = getDatos(getInicioRango(), getFinRango());
     	if (datosSegmento.getAltitudMed() > 0) datosSegmento.setCoeficienteAPM(getCoeficienteAPMRango());
     	return datosSegmento;
 	}
@@ -494,6 +658,11 @@ public class DatosActividad {
 	public void setActividadBean(ActividadBean actividadBean) {
 		this.actividadBean = actividadBean;
 		resetDatosGraficas();
+	}
+
+
+	public DatosSegmentoBean getDatosTrack() {
+		return datosTrack;
 	}
 	
 }

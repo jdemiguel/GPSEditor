@@ -7,9 +7,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
+import aplicaciones.gpsedit.beans.DatosSegmentoBean;
 import aplicaciones.gpsedit.beans.Track;
-import aplicaciones.gpsedit.config.Configuracion;
-import aplicaciones.gpsedit.config.ConfiguracionCoeficientes;
 import aplicaciones.gpsedit.util.UtilidadesFormat;
 
 public class PanelDatosActividad extends JPanel implements ActionListener{
@@ -31,49 +30,48 @@ public class PanelDatosActividad extends JPanel implements ActionListener{
 	private PanelCampo tipoActividadLabel = new PanelCampo("Actividad:");
 	private PanelCampo dispositivoLabel = new PanelCampo("Dispositivo:");
 	private PanelCampo autorLabel = new PanelCampo("Autor:");
-	private ActionListener listener;
 
-	public PanelDatosActividad(ActionListener listener) {
-		this.listener = listener;
+	public PanelDatosActividad() {
 		setLayout(new GridLayout(3, 5));
 	}
 	public void update(DatosActividad datosActividad)  {
 		removeAll();
 		Track track = datosActividad.getTrack();
+		DatosSegmentoBean datosTrack = datosActividad.getDatosTrack();
 		
-		longitudLabel.setValor(UtilidadesFormat.getFloatFormat().format(track.getDatos().getLongitud() / 1000.0) + " km");
-		tiempoAbsolutoLabel.setValor(UtilidadesFormat.getTiempoFormat().format(track.getDatos().getTiempoAbsoluto()) + " horas");
-		tiempoMovimientoLabel.setValor(UtilidadesFormat.getTiempoFormat().format(track.getDatos().getTiempoMovimiento()) + " horas");
+		longitudLabel.setValor(UtilidadesFormat.getFloatFormat().format(datosTrack.getLongitud() / 1000.0) + " km");
+		tiempoAbsolutoLabel.setValor(UtilidadesFormat.getTiempoFormat().format(datosTrack.getTiempoAbsoluto()) + " horas");
+		tiempoMovimientoLabel.setValor(UtilidadesFormat.getTiempoFormat().format(datosTrack.getTiempoMovimiento()) + " horas");
 	    add(longitudLabel); 
 	    add(tiempoAbsolutoLabel);
 	    add(tiempoMovimientoLabel);
 		
 	    if (track.getTipoActividad().isPaso()) {
-			pasoMedLabel.setValor(UtilidadesFormat.getPasoFormat().format(track.getDatos().getPasoMed()) + " min/km");        
+			pasoMedLabel.setValor(UtilidadesFormat.getPasoFormat().format(datosTrack.getPasoMed()) + " min/km");        
 		    add(pasoMedLabel);
 	    } else {
-			velocidadMedLabel.setValor(UtilidadesFormat.getDecimalFormat().format(track.getDatos().getVelocidadMed()) + " km/h");        
+			velocidadMedLabel.setValor(UtilidadesFormat.getDecimalFormat().format(datosTrack.getVelocidadMed()) + " km/h");        
 		    add(velocidadMedLabel);
 	    }
 		
-		if (track.getDatos().getCadenciaMed() > 0) {
+		if (datosTrack.getCadenciaMed() > 0) {
 	 	    add(cadenciaMedLabel); 
-			cadenciaMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(track.getDatos().getCadenciaMed()));
+			cadenciaMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(datosTrack.getCadenciaMed()));
 		}
 		
-		if (track.getDatos().getHrMed() > 0) {
+		if (datosTrack.getHrMed() > 0) {
 		    add(hrMedLabel);
-			hrMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(track.getDatos().getHrMed()) + " bpm");
+			hrMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(datosTrack.getHrMed()) + " bpm");
 		}
 		
-		if (track.getDatos().getPotenciaMed() > 0) {
+		if (datosTrack.getPotenciaMed() > 0) {
 		    add(potenciaMedLabel);
-			potenciaMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(track.getDatos().getPotenciaMed()));
+			potenciaMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(datosTrack.getPotenciaMed()));
 		}
 		
-		if (track.getDatos().getAltitudMed() > 0 && track.isHayGPS()) {
+		if (datosTrack.getAltitudMed() > 0 && track.isHayGPS()) {
 		    add(desnivelAcumuladoLabel); 
-			desnivelAcumuladoLabel.setValor(UtilidadesFormat.getIntegerFormat().format(track.getDatos().getDesnivelAcumulado()) + " m");
+			desnivelAcumuladoLabel.setValor(UtilidadesFormat.getIntegerFormat().format(datosTrack.getDesnivelAcumulado()) + " m");
 			add(coeficienteLabel);
 			coeficienteLabel.setValor(UtilidadesFormat.getDecimalFormat().format(datosActividad.getCoeficienteAPMTotal()));
 		}

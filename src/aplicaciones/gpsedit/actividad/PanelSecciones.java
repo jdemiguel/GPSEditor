@@ -46,10 +46,12 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import aplicaciones.gpsedit.ConstantesAcciones;
+import aplicaciones.gpsedit.beans.DatosSegmentoBean;
 import aplicaciones.gpsedit.beans.Seccion;
 import aplicaciones.gpsedit.config.Configuracion;
 import aplicaciones.gpsedit.config.ConfiguracionEjeRango;
 import aplicaciones.gpsedit.config.ConfiguracionSecciones;
+import aplicaciones.gpsedit.gps.TrackUtil;
 import aplicaciones.gpsedit.listeners.ResizeDinamicoListener;
 import aplicaciones.gpsedit.util.UtilidadesFormat;
 
@@ -222,14 +224,15 @@ public class PanelSecciones extends JPanel implements ActionListener, ChartMouse
 		categorias.clear();
 		for (int i=0; i<secciones.size(); i++ )  {
 			Seccion seccion = secciones.get(i);
+			DatosSegmentoBean datos = datosActividad.getDatos(seccion.getInicioRango(), seccion.getFinRango());
 			categorias.put(seccion.getTexto(), seccion);
-			datasetHR.addValue((double)seccion.getDatos().getHrMed(), "HR", seccion.getTexto());
-			datasetCadencia.addValue((double)seccion.getDatos().getCadenciaMed(), "Cadencia", seccion.getTexto());
-			datasetPotencia.addValue((double)seccion.getDatos().getPotenciaMed(), "Potencia", seccion.getTexto());
+			datasetHR.addValue((double)datos.getHrMed(), "HR", seccion.getTexto());
+			datasetCadencia.addValue((double)datos.getCadenciaMed(), "Cadencia", seccion.getTexto());
+			datasetPotencia.addValue((double)datos.getPotenciaMed(), "Potencia", seccion.getTexto());
 			if (datosActividad.getTrack().getTipoActividad().isPaso())  {
-				datasetVelocidad.addValue((double)seccion.getDatos().getPasoMed(), "Paso", seccion.getTexto());
+				datasetVelocidad.addValue((double)datos.getPasoMed(), "Paso", seccion.getTexto());
 			} else {
-				datasetVelocidad.addValue((double)seccion.getDatos().getVelocidadMed(), "Velocidad", seccion.getTexto());
+				datasetVelocidad.addValue((double)datos.getVelocidadMed(), "Velocidad", seccion.getTexto());
 			}
 		}
 	}
@@ -243,12 +246,13 @@ public class PanelSecciones extends JPanel implements ActionListener, ChartMouse
 	}
 	
 	public void setValorSeleccionado(Seccion seccion)  {
-		StringBuffer textoHR = new StringBuffer("HR: " + UtilidadesFormat.getIntegerFormat().format(seccion.getDatos().getHrMed()) + " ppm");
-		StringBuffer textoCadencia = new StringBuffer("Cadencia: " + UtilidadesFormat.getIntegerFormat().format(seccion.getDatos().getCadenciaMed()));
-		StringBuffer textoPotencia = new StringBuffer("Potencia: " + UtilidadesFormat.getIntegerFormat().format(seccion.getDatos().getPotenciaMed()) + " W");
+		DatosSegmentoBean datos = datosActividad.getDatos(seccion.getInicioRango(), seccion.getFinRango());
+		StringBuffer textoHR = new StringBuffer("HR: " + UtilidadesFormat.getIntegerFormat().format(datos.getHrMed()) + " ppm");
+		StringBuffer textoCadencia = new StringBuffer("Cadencia: " + UtilidadesFormat.getIntegerFormat().format(datos.getCadenciaMed()));
+		StringBuffer textoPotencia = new StringBuffer("Potencia: " + UtilidadesFormat.getIntegerFormat().format(datos.getPotenciaMed()) + " W");
 		StringBuffer textoVelocidad = new StringBuffer();
-		if (datosActividad.getTrack().getTipoActividad().isPaso()) textoVelocidad.append("Paso: " + UtilidadesFormat.getPasoFormat().format(seccion.getDatos().getPasoMed()) + " min/km");
-		else textoVelocidad.append("Velocidad: " + UtilidadesFormat.getDecimalFormat().format(seccion.getDatos().getVelocidadMed()) + " km/h");
+		if (datosActividad.getTrack().getTipoActividad().isPaso()) textoVelocidad.append("Paso: " + UtilidadesFormat.getPasoFormat().format(datos.getPasoMed()) + " min/km");
+		else textoVelocidad.append("Velocidad: " + UtilidadesFormat.getDecimalFormat().format(datos.getVelocidadMed()) + " km/h");
 		plot.removeAnnotation(annotationHR);
 		plot.removeAnnotation(annotationCadencia);
 		plot.removeAnnotation(annotationVelocidad);

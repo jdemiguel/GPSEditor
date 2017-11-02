@@ -8,7 +8,6 @@ public class Track {
 
 	private List<TrackPoint> puntos =  new ArrayList<TrackPoint>();
 	private List<Seccion> secciones =  new ArrayList<Seccion>();
-	private DatosSegmentoBean datos = new DatosSegmentoBean();
 	
 	private Autor autor;
 	private String nombre;
@@ -30,10 +29,6 @@ public class Track {
 
 	public void setHayGPS(boolean hayGPS) {
 		this.hayGPS = hayGPS;
-	}
-
-	public void setDatos(DatosSegmentoBean datos) {
-		this.datos = datos;
 	}
 	
 	public TrackPoint getPrimero() {
@@ -115,10 +110,6 @@ public class Track {
 		this.calorias = calorias;
 	}
 
-	public DatosSegmentoBean getDatos() {
-		return datos;
-	}
-
 	public Dispositivo getDispositivo() {
 		return dispositivo;
 	}
@@ -155,7 +146,6 @@ public class Track {
 		Track track = new Track();
 		track.setAutor(autor.clone());
 		track.setCalorias(calorias);
-		track.setDatos(datos.clone());
 		track.setDescripcion(descripcion);
 		track.setDispositivo(dispositivo.clone());
 		track.setFichero(new File(fichero.getAbsolutePath()));

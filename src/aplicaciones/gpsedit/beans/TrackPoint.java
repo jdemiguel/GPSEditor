@@ -15,7 +15,7 @@ public class TrackPoint {
 	private double distancia;
 	private double distanciaLeida;
 	private double distanciaCalculada;
-	private double pendiente;
+	private double pendienteBruta;
 	private double velocidad;
 	private double velocidadLeida;
 	private double velocidadCalculada;
@@ -83,11 +83,11 @@ public class TrackPoint {
 	public void setDistancia(double distancia) {
 		this.distancia = distancia;
 	}
-	public double getPendiente() {
-		return pendiente;
+	public double getPendienteBruta() {
+		return pendienteBruta;
 	}
-	public void setPendiente(double pendiente) {
-		this.pendiente = pendiente;
+	public void setPendienteBruta(double pendiente) {
+		this.pendienteBruta = pendiente;
 	}
 	public double getVelocidad() {
 		return velocidad;
@@ -145,7 +145,7 @@ public class TrackPoint {
 		punto.setLatitud(latitud);
 		punto.setLongitud(longitud);
 		punto.setPaso(paso);
-		punto.setPendiente(pendiente);
+		punto.setPendienteBruta(pendienteBruta);
 		punto.setPotencia(potencia);
 		punto.setTiempoAbsoluto(tiempoAbsoluto);
 		punto.setTiempoMovimiento(tiempoMovimiento);

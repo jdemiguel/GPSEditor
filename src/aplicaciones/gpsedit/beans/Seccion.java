@@ -5,25 +5,26 @@ import java.util.List;
 
 public class Seccion {
 	private List<TrackPoint> puntos =  new ArrayList<TrackPoint>();
-	private DatosSegmentoBean datos = new DatosSegmentoBean();
 	private int inicioRango;
 	private int finRango;
 	private String texto;
 	private String triggerMethod;
 	private String intensidad;
 	
+	
+	//rawSeccion.setCadenciaMed(seccion.getDatos().getCadenciaMed());
+	//rawSeccion.setLongitud(seccion.getDatos().getLongitud());			
+	//rawSeccion.setHRMax(seccion.getDatos().getHrMax());
+	//rawSeccion.setHRMed(seccion.getDatos().getHrMed());
+	//rawSeccion.setTiempoTotal(seccion.getDatos().getTiempoAbsoluto());
+	//rawSeccion.setVelocidadMaxima(seccion.getDatos().getVelocidadMax());
+	//rawSeccion.setVelocidadMed(seccion.getDatos().getVelocidadMed());
+	
 	public List<TrackPoint> getPuntos() {
 		return puntos;
 	}
 	public void addPunto(TrackPoint punto)  {
 		puntos.add(punto);
-	}
-	
-	public DatosSegmentoBean getDatos() {
-		return datos;
-	}
-	public void setDatos(DatosSegmentoBean datos) {
-		this.datos = datos;
 	}
 	public int getInicioRango() {
 		return inicioRango;
@@ -76,7 +77,6 @@ public class Seccion {
 		seccion.setIntensidad(intensidad);
 		seccion.setTexto(texto);
 		seccion.setTriggerMethod(triggerMethod);
-		seccion.setDatos(datos.clone());
 
 		for (TrackPoint punto:puntos) seccion.addPunto(punto.clone());
 		return seccion;

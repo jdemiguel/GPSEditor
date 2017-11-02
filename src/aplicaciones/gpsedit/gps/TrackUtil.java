@@ -1,17 +1,15 @@
 package aplicaciones.gpsedit.gps;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import aplicaciones.gpsedit.GPSEdit;
-import aplicaciones.gpsedit.beans.DatosSegmentoBean;
-import aplicaciones.gpsedit.beans.Seccion;
 import aplicaciones.gpsedit.beans.RawSeccion;
 import aplicaciones.gpsedit.beans.RawTrack;
 import aplicaciones.gpsedit.beans.RawTrackPoint;
+import aplicaciones.gpsedit.beans.Seccion;
 import aplicaciones.gpsedit.beans.TipoActividad;
 import aplicaciones.gpsedit.beans.Track;
 import aplicaciones.gpsedit.beans.TrackPoint;
@@ -24,6 +22,7 @@ public class TrackUtil {
 	public static RawTrack toRawTrack(Track track)  {
 		RawTrack rawTrack = new RawTrack();
 		List<Seccion> secciones = track.getSecciones();
+		boolean hayCadencia = false;
 		for (int numSeccion = 0; numSeccion < secciones.size(); numSeccion++)  {
 			Seccion seccion = secciones.get(numSeccion);
 			RawSeccion rawSeccion = new RawSeccion();
@@ -41,16 +40,17 @@ public class TrackUtil {
 				rawPunto.setPotencia(punto.getPotencia());
 				rawPunto.setVelocidad(punto.getVelocidadLeida());
 				rawSeccion.addPunto(rawPunto);
+				if (punto.getCadencia() > 0)  hayCadencia = true;
 			}			
 			rawSeccion.setTriggerMethod(seccion.getTriggerMethod());
 			rawSeccion.setIntensidad(seccion.getIntensidad());
-			rawSeccion.setCadenciaMed(seccion.getDatos().getCadenciaMed());
-			rawSeccion.setLongitud(seccion.getDatos().getLongitud());			
-			rawSeccion.setHRMax(seccion.getDatos().getHrMax());
-			rawSeccion.setHRMed(seccion.getDatos().getHrMed());
-			rawSeccion.setTiempoTotal(seccion.getDatos().getTiempoAbsoluto());
-			rawSeccion.setVelocidadMaxima(seccion.getDatos().getVelocidadMax());
-			rawSeccion.setVelocidadMed(seccion.getDatos().getVelocidadMed());
+			//rawSeccion.setCadenciaMed(seccion.getDatos().getCadenciaMed());
+			//rawSeccion.setLongitud(seccion.getDatos().getLongitud());			
+			//rawSeccion.setHRMax(seccion.getDatos().getHrMax());
+			//rawSeccion.setHRMed(seccion.getDatos().getHrMed());
+			//rawSeccion.setTiempoTotal(seccion.getDatos().getTiempoAbsoluto());
+			//rawSeccion.setVelocidadMaxima(seccion.getDatos().getVelocidadMax());
+			//rawSeccion.setVelocidadMed(seccion.getDatos().getVelocidadMed());
 			
 			rawTrack.addSeccion(rawSeccion);
 		}
@@ -63,7 +63,7 @@ public class TrackUtil {
 		rawTrack.setCalorias(track.getCalorias());
 		rawTrack.setTime(track.getPrimero().getHora());
 		rawTrack.setHayGPS(track.isHayGPS());
-		rawTrack.setHayCadencia(track.getDatos().getCadenciaMed() > 0);
+		rawTrack.setHayCadencia(hayCadencia);
 		
 		rawTrack.setFichero(track.getFichero());
 		rawTrack.setGrabado(track.isGrabado());
@@ -77,18 +77,12 @@ public class TrackUtil {
 		ConfiguracionTrack configuracionTrack = Configuracion.getInstance().getConfiguracionTrack();
 		Track track = new Track();
 		List<RawSeccion> secciones = rawTrack.getSecciones();
-        int numElementosPendienteSuavizada = 100; //para la pendiente vamos hacemos la media de los ultimos n valores
-        
-        List<Double> ultimasLongitudesPte = new ArrayList<Double>();
-        List<Double> ultimasLongitudesVel = new ArrayList<Double>();
-        List<Double> ultimasAltitudes = new ArrayList<Double>();
-        List<Long> ultimosTiempos = new ArrayList<Long>();
 
         double latitudAnterior = 0.0;
 		double longitudAnterior = 0.0;
 		double distanciaAnterior = 0;
 		double altitudAnterior = 0;
-		double pendienteAnterior =0.0;
+		double pendienteBrutaAnterior =0.0;
 		long tiempoAbsolutoAnterior = 0;
 		long tiempoMovimiento = 0;
 		long distanciaVelAnterior = 0;
@@ -135,7 +129,7 @@ public class TrackUtil {
 					
 		        	punto.setDistanciaLeida(distancia);
 		        	
-					double pendiente = 0.0;
+					double pendienteBruta = 0.0;
 					double velocidad = 0.0;
 					
 		       		//si en este punto no hay distancia en el fichero GPS la calculamos desde la anterior (que puede ser real o calculada) más el incremento des calculo de distancia por valores latitud y longitud
@@ -177,10 +171,6 @@ public class TrackUtil {
 	       				//si se ha perdido unos cuantos puntos y la velocidad media con el anterior es menor de 3,6 km/h ... cero velocidad al anterior y cero a este
 		       			//en cambio en pendiente eliminamos este punto para que no se tenga en cuenta por si es disparatado
 	       				if (incTiempo > configuracionTrack.getTiempoMinimo() && incDistancia < configuracionTrack.getDistanciaMinima())  {
-	       					ultimasLongitudesVel.clear();
-	       					ultimosTiempos.clear();
-	       					ultimasLongitudesPte.clear();
-	       					ultimasAltitudes.clear();
 	       					TrackPoint ultimo = track.getUltimo();
 	       					if (track.getPuntos().size() > 0)
 	       					if (ultimo != null)  {
@@ -188,52 +178,19 @@ public class TrackUtil {
 	    		        		ultimo.setVelocidad(0.0);
 	    		        	}
 	       					velocidad = 0.0;
-	       					pendiente = pendienteAnterior;
-	       				} else {
-	       					ultimasLongitudesVel.add(incDistancia);
-	       					ultimosTiempos.add(incTiempo);
-	       					ultimasLongitudesPte.add(incDistancia);
-	       					ultimasAltitudes.add(desnivel);
+	       					pendienteBruta = pendienteBrutaAnterior;
 	       				}
 
-		       			if (ultimasLongitudesVel.size() > numElementosPendienteSuavizada) ultimasLongitudesVel.remove(0);
-		       			if (ultimasLongitudesPte.size() > numElementosPendienteSuavizada) ultimasLongitudesPte.remove(0);
-		       			if (ultimosTiempos.size() > numElementosPendienteSuavizada) ultimosTiempos.remove(0);
-		       			if (ultimasAltitudes.size() > numElementosPendienteSuavizada) ultimasAltitudes.remove(0);
-		       			
-	       				double longitudAcumulada = 0;
-	       				long tiempoAcumulado = 0;
+		       			velocidad = (double)Math.round((3600.0 * incDistancia * 1000.0 / (double)incTiempo)) / 1000.0;
+		       			pendienteBruta = Math.round((desnivel * 1000.0 / incDistancia)) / 1000.0;
+
+	       				if (Math.abs(pendienteBrutaAnterior - pendienteBruta) > configuracionTrack.getCambioMaximoPendiente()) {
+	       					//pendiente = pendienteAnterior; 
+	       				}
 	       				
-	       				if (ultimasLongitudesVel.size() > 0)  {
-		       				for (int index=ultimasLongitudesVel.size()-1; index >= 0; index--)  {
-		       					if ((index < ultimasLongitudesVel.size()-1) && ultimasLongitudesVel.get(index) == 0) break;
-		       					longitudAcumulada += ultimasLongitudesVel.get(index);
-		       					tiempoAcumulado += ultimosTiempos.get(index);
-		       				}
-			       			velocidad = (double)Math.round((3600.0 * longitudAcumulada * 1000.0 / (double)tiempoAcumulado)) / 1000.0;
-			       			longitudAcumulada = 0;
-	       				}
-	       				double desnivelAcumulada = 0;
-	       				if (ultimasLongitudesPte.size() > 0)  {
-		       				for (int index=ultimasLongitudesPte.size()-1; index >= 0; index--)  {
-		       					if ((index < ultimasLongitudesPte.size()-1) && ultimasLongitudesPte.get(index) == 0) break;
-		       					longitudAcumulada += ultimasLongitudesPte.get(index);
-		       					desnivelAcumulada += ultimasAltitudes.get(index);
-		       				}
-		       				pendiente = Math.round((desnivelAcumulada * 1000.0 / longitudAcumulada)) / 1000.0;
-	       				}
-		       		    
-	       				//valor disparatado por incrementarse mucho
-	       				if (Math.abs(pendienteAnterior - pendiente) > configuracionTrack.getCambioMaximoPendiente()) {
-//	       					System.out.println("Valor disparatado de pendiente. Punto:" + puntos.size() + ". Pendiente:" + pendiente + ". Pendiente anterior:" + pendienteAnterior);
-	       					pendiente = pendienteAnterior; 
-	       					if (ultimasLongitudesPte.size() > 0) ultimasLongitudesPte.remove(ultimasLongitudesPte.size()-1);
-	       					if (ultimasAltitudes.size() > 0) ultimasAltitudes.remove(ultimasAltitudes.size()-1);
-	       				}
-			        	
 			        	if (velocidad > configuracionTrack.getVelocidadMinima()) tiempoMovimiento = tiempoMovimiento + incTiempo;
 			        	
-			        	punto.setPendiente(pendiente);
+			        	punto.setPendienteBruta(pendienteBruta);
 			        	punto.setDesnivel(desnivel);
 			        }
 
@@ -248,7 +205,7 @@ public class TrackUtil {
 					longitudAnterior = longitud;
 					tiempoAbsolutoAnterior = tiempoAbsoluto;
 					altitudAnterior = altitud;
-					pendienteAnterior = pendiente;
+					pendienteBrutaAnterior = pendienteBruta;
 					distanciaVelAnterior = distanciaVel;
 
 				} catch (Exception e) {
@@ -260,7 +217,6 @@ public class TrackUtil {
 			}			
 			if (seccion.getPuntos().size() > 1) {
 				seccion.setFinRango(indexPunto - 1);
-				seccion.setDatos(TrackUtil.getDatos(seccion.getPuntos()));
 				track.addSeccion(seccion);
 			}
 			seccion.setTriggerMethod(rawSeccion.getTriggerMethod());
@@ -268,8 +224,6 @@ public class TrackUtil {
 			seccion.setIntensidad(rawSeccion.getIntensidad());
 			if (seccion.getIntensidad() ==  null) seccion.setIntensidad("Active");
 		}
-		track.setDatos(TrackUtil.getDatos(track.getPuntos()));
-		
 		track.setAutor(rawTrack.getAutor());
 		track.setDispositivo(rawTrack.getDispositivo());
 		track.setNombre(rawTrack.getNombre());
@@ -302,168 +256,5 @@ public class TrackUtil {
 		
 		return track;
 	}
-	
-	public static DatosSegmentoBean getDatos(List<TrackPoint> puntos) {
-		DatosSegmentoBean datosSegmento = new DatosSegmentoBean();
-		if (puntos.size() < 2) return datosSegmento;
-		
-		TrackPoint puntoInicio = puntos.get(0);
-		TrackPoint puntoFin = puntos.get(puntos.size() - 1);
-		
-		long tiempoMovimiento = 0 ;
-		long tiempoAbsoluto = 0;
-		long cadenciaMed = 0;
-		long cadenciaMax = 0;
-		long cadenciaMin = 10000;
-		long potenciaMed = 0;
-		long potenciaMax = 0;
-		long potenciaMin = 10000;
-		long numElementosCadenciaMed = 0;
-		long numElementosHRMed = 0;
-		long numElementosPotenciaMed = 0;
-		long numElementosAltitudMed = 0;
-		long numElementosVelocidadMed = 0;
-		long hrMed = 0;
-		long hrMax = 0;
-		long hrMin = 10000;
-		double velocidadMed = 0;
-		double velocidadMax = 0;
-		double velocidadMin = 10000;
-		double pendienteMax = 0;
-		double pendienteMin = 10000;
-		double altitudMed = 0;
-		double altitudMax = 0;
-		double altitudMin = 10000;
-		double desnivelAcumulado = 0;
-		double longitud;
-
-		long distanciaInicial = Math.round(Math.floor(puntos.get(0).getDistancia()));
-		long distanciaFinal = Math.round(Math.floor(puntoFin.getDistancia()));
-
-		long tiempoInicial = puntoInicio.getTiempoMovimiento();
-		long tiempoFinal = puntoFin.getTiempoMovimiento();
-
-    	Date horaInicio = puntoInicio.getHora();
-    	Date horaFin = puntoFin.getHora();
-    	
-    	longitud = puntoFin.getDistancia() - puntoInicio.getDistancia();
-    	tiempoAbsoluto = puntoFin.getTiempoAbsoluto() - puntoInicio.getTiempoAbsoluto();
-    	tiempoMovimiento = puntoFin.getTiempoMovimiento() - puntoInicio.getTiempoMovimiento();
-    	
-    	for (int i = 0; i < puntos.size(); i++)  {
-    		TrackPoint punto = puntos.get(i);
-    		
-        	double altitud = punto.getAltitud();
-        	if (altitud > altitudMax) altitudMax = altitud;
-        	if (altitud < altitudMin && altitud > 0) altitudMin = altitud;
-
-        	long hr = punto.getHR();
-        	if (hr > hrMax) hrMax = hr;
-        	if (hr < hrMin && hr > 0) hrMin = hr;
-
-        	long cadencia = punto.getCadencia();
-        	if (cadencia > cadenciaMax) cadenciaMax = cadencia;
-        	if (cadencia < cadenciaMin) cadenciaMin = cadencia;
-
-        	long potencia = punto.getPotencia();
-        	if (potencia > potenciaMax) potenciaMax = potencia;
-        	if (potencia < potenciaMin) potenciaMin = potencia;
-        	
-        	potenciaMed += potencia;
-    		numElementosPotenciaMed++;
-        	
-        	if (cadencia > 0) {
-        		cadenciaMed += cadencia;
-        		numElementosCadenciaMed++;;
-        	}
-   			if (hr > 0) {
-	        	hrMed += hr;
-        		numElementosHRMed++;;
-        	}
-   			if (altitud > 0) {
-	        	altitudMed += altitud;
-        		numElementosAltitudMed++;;
-        	}
-   			numElementosVelocidadMed++;
-
-    		double pendiente = punto.getPendiente();
-        	if (pendiente > pendienteMax) pendienteMax = pendiente;
-        	if (pendiente < pendienteMin) pendienteMin = pendiente;
-
-        	double velocidad = punto.getVelocidad();
-        	if (velocidad > velocidadMax) velocidadMax = velocidad;
-        	if (velocidad < velocidadMin) velocidadMin = velocidad;
-        	velocidadMed += velocidad;
-
-        	double desnivel = punto.getDesnivel();       	
-        	if (desnivel > 0) desnivelAcumulado += desnivel;
-        	
-    	}
-
-		double primeraAltitud = 0;
-		double ultimaAltitud = 0;
-		for (int index  = 0; index < puntos.size(); index++)  {
-			if (primeraAltitud == 0) primeraAltitud = puntos.get(index).getAltitud();
-			if (puntos.get(index).getAltitud() != 0) ultimaAltitud = puntos.get(index).getAltitud();
-		}
-		
-		double desnivelTotal = ultimaAltitud - primeraAltitud;
-		double pendienteMed = desnivelTotal / (double)longitud;
-
-		if (numElementosCadenciaMed > 0) cadenciaMed = Math.round(cadenciaMed / (double)numElementosCadenciaMed);
-        else cadenciaMed = 0;
-		if (numElementosPotenciaMed > 0) potenciaMed = Math.round(potenciaMed / (double)numElementosPotenciaMed);
-        else potenciaMed = 0;
-		if (numElementosHRMed > 0) hrMed = Math.round(hrMed / (double)numElementosHRMed);
-        else hrMed = 0;
-		if (numElementosAltitudMed > 0) altitudMed = Math.round(altitudMed / (double)numElementosAltitudMed);
-        else altitudMed = 0;
-		if (numElementosVelocidadMed > 0) velocidadMed = velocidadMed / (double)numElementosVelocidadMed;
-        else velocidadMed = 0;
-
-		if (altitudMin == 10000) altitudMin = 0;
-		if (hrMin == 10000) hrMin = 0;
-		if (cadenciaMin == 10000) cadenciaMin = 0;
-		if (velocidadMin == 10000) velocidadMin = 0;
-		if (pendienteMin == 10000) pendienteMin = 0;
-		if (potenciaMin == 10000) potenciaMin = 0;
-		
-		datosSegmento.setDistanciaInicial(distanciaInicial);
-		datosSegmento.setDistanciaFinal(distanciaFinal);
-		datosSegmento.setTiempoInicial(tiempoInicial);
-		datosSegmento.setTiempoFinal(tiempoFinal);
-		datosSegmento.setHoraInicio(horaInicio);
-		datosSegmento.setHoraFin(horaFin);
-		datosSegmento.setTiempoMovimiento(tiempoMovimiento);
-		datosSegmento.setTiempoAbsoluto(tiempoAbsoluto);
-		datosSegmento.setLongitud(longitud);
-		datosSegmento.setDesnivelTotal(desnivelTotal);
-		datosSegmento.setDesnivelAcumulado(desnivelAcumulado);
-		datosSegmento.setAltitudMax(altitudMax);
-		datosSegmento.setAltitudMed(altitudMed);
-		datosSegmento.setAltitudMin(altitudMin);
-		datosSegmento.setHrMed(hrMed);
-		datosSegmento.setHrMin(hrMin);
-		datosSegmento.setHrMax(hrMax);
-		datosSegmento.setCadenciaMed(cadenciaMed);
-		datosSegmento.setCadenciaMin(cadenciaMin);
-		datosSegmento.setCadenciaMax(cadenciaMax);
-		datosSegmento.setVelocidadMed(velocidadMed);
-		datosSegmento.setVelocidadMin(velocidadMin);
-		datosSegmento.setVelocidadMax(velocidadMax);
-		datosSegmento.setPasoMed(3600000.0 / velocidadMed);
-		datosSegmento.setPasoMin(3600000.0 / velocidadMin);
-		datosSegmento.setPasoMax(3600000.0 / velocidadMax);
-		datosSegmento.setPotenciaMed(potenciaMed);
-		datosSegmento.setPotenciaMin(potenciaMin);
-		datosSegmento.setPotenciaMax(potenciaMax);
-		
-		datosSegmento.setPendienteMed(pendienteMed);
-		datosSegmento.setPendienteMin(pendienteMin);
-		datosSegmento.setPendienteMax(pendienteMax);
-		
-		return datosSegmento;
-	}
-	
 	
 }
