@@ -133,7 +133,7 @@ public class DatosActividad {
         	if (pendiente > pendienteMax) pendienteMax = pendiente;
         	if (pendiente < pendienteMin) pendienteMin = pendiente;
 
-        	double velocidad = punto.getVelocidad();
+        	double velocidad = getVelocidad(i);
         	if (velocidad > velocidadMax) velocidadMax = velocidad;
         	if (velocidad < velocidadMin) velocidadMin = velocidad;
         	velocidadMed += velocidad;
@@ -369,6 +369,22 @@ public class DatosActividad {
 	private DatosTodasGraficasBean getDatosGraficasHora(EjeX ejeX) {
 		if (datosGraficasHora == null) setDatosGrafica(ejeX);
 		return datosGraficasHora;
+	}
+	
+	public double getPaso(int punto)  {
+		TrackPoint trackPoint = getTrack().getPuntos().get(punto);
+		if (trackPoint.getVelocidadLeida() > 0) return trackPoint.getPaso();
+		EjeX ejeX = EjeX.getInstanciaEjeDistancia();
+		UnivariateFunction pasosInterpolados = getDatosGrafica(ejeX).getDatosPaso().getDatosSuavizados(9);
+		return pasosInterpolados.value(getValorX(trackPoint, ejeX)) * 60000;
+	}	
+	
+	public double getVelocidad(int punto)  {
+		TrackPoint trackPoint = getTrack().getPuntos().get(punto);
+		if (trackPoint.getVelocidadLeida() > 0) return trackPoint.getVelocidadLeida();
+		EjeX ejeX = EjeX.getInstanciaEjeDistancia();
+		UnivariateFunction velocidadesInterpoladas = getDatosGrafica(ejeX).getDatosVelocidad().getDatosSuavizados(9);
+		return velocidadesInterpoladas.value(getValorX(trackPoint, ejeX));
 	}
 	
 	public double getPendiente(int punto)  {

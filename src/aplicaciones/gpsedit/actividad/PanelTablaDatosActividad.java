@@ -102,8 +102,8 @@ public class PanelTablaDatosActividad extends JPanel implements ListSelectionLis
     		if (datosTrack.getHrMed() > 0) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getHR()));
     		if (datosTrack.getCadenciaMed() > 0) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getCadencia()));
     		if (datosTrack.getPotenciaMed() > 0) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getPotencia()));
-        	if (datosActividad.getTrack().getTipoActividad().isPaso()) fila.add(UtilidadesFormat.getPasoFormat().format(punto.getPaso()));
-        	else fila.add(UtilidadesFormat.getDecimalFormat().format(punto.getVelocidad()));
+        	if (datosActividad.getTrack().getTipoActividad().isPaso()) fila.add(UtilidadesFormat.getPasoFormat().format(datosActividad.getPaso(i)));
+        	else fila.add(UtilidadesFormat.getDecimalFormat().format(datosActividad.getVelocidad(i)));
         	if (!datosActividad.getTrack().getTipoActividad().isPaso()) {
         		fila.add(UtilidadesFormat.getDecimalFormat().format(punto.getVelocidadLeida()));
         		fila.add(UtilidadesFormat.getDecimalFormat().format(punto.getVelocidadCalculada()));

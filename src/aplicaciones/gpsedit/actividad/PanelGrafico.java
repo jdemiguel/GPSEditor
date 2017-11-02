@@ -195,8 +195,8 @@ public class PanelGrafico extends JPanel implements ChartMouseListener, AxisChan
 			graficaAltitud.setValorSeleccionado(valorX, UtilidadesFormat.getIntegerFormat().format(trackPoint.getAltitud()) + " m");
 			graficaHR.setValorSeleccionado(valorX, UtilidadesFormat.getIntegerFormat().format(trackPoint.getHR()) + " bpm");
 			graficaCadencia.setValorSeleccionado(valorX, UtilidadesFormat.getIntegerFormat().format(trackPoint.getCadencia()));    
-			if (datosActividad.getTrack().getTipoActividad().isPaso()) graficaVelocidad.setValorSeleccionado(valorX, UtilidadesFormat.getPasoFormat().format(trackPoint.getPaso()) + " min/km");        
-			else graficaVelocidad.setValorSeleccionado(valorX, UtilidadesFormat.getDecimalFormat().format(trackPoint.getVelocidad()) + " km/h");        
+			if (datosActividad.getTrack().getTipoActividad().isPaso()) graficaVelocidad.setValorSeleccionado(valorX, UtilidadesFormat.getPasoFormat().format(datosActividad.getPaso(datosActividad.getPuntoSeleccionado())) + " min/km");        
+			else graficaVelocidad.setValorSeleccionado(valorX, UtilidadesFormat.getDecimalFormat().format(datosActividad.getVelocidad(datosActividad.getPuntoSeleccionado())) + " km/h");        
 			graficaPendiente.setValorSeleccionado(valorX, UtilidadesFormat.getPercentFormat().format(datosActividad.getPendiente(datosActividad.getPuntoSeleccionado())));        
 			graficaPotencia.setValorSeleccionado(valorX, UtilidadesFormat.getIntegerFormat().format(trackPoint.getPotencia()) + " W");        
 		} else {
