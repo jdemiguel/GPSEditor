@@ -9,7 +9,7 @@ public class ConfiguracionCoeficientes {
 	private Color colorRelleno = Color.GRAY;
 	private boolean relleno = true; 
 	private boolean suavizado = true;
-	private int ajusteSuavidad = 6;
+	private int ajusteSuavidad = 9;
 	private boolean ejeCero = false;
 	private boolean mostrarLineasPrincipales = true;
 	private boolean mostrarLineasSecundarias = true;
