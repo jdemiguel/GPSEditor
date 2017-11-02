@@ -48,7 +48,7 @@ public class DatosGraficaBean {
 			try {
 				this.datosSuavizados[suavidad] = interpoladorLoess.interpolate(getEjeX(), getValores());
 			} catch (Exception e)  {
-				GPSEdit.logger.debug("Error en interpolador: bajamos" + suavidad);
+				GPSEdit.logger.debug("Error en interpolador: bajamos" + suavidad, e);
 				if (suavidad == 0) this.datosSuavizados[suavidad] = getDatosBrutos();
 				else this.datosSuavizados[suavidad] = getDatosSuavizados(suavidad - 1);
 			}
