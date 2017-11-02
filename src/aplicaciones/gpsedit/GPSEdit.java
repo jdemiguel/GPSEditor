@@ -70,10 +70,10 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 
 		this.thread.start();
 		enableEvents(AWTEvent.KEY_EVENT_MASK);
-		File fichero = new File("C:\\Users\\jdemgon\\Downloads\\gps\\polar\\Jesus_de+Miguel_2017-09-01_08-50-33.tcx");
+		File fichero = new File("d:\\tmp\\cycling\\2017-01-22 840650415 Race cycling Strsava.tcx");
 		try {
 			abrirFichero(fichero, UtilidadesFicheros.getTipo(fichero));
-		} catch (ExtensionInvalidaException e) {
+		} catch (Exception e) {
 		}
 
 	}
@@ -172,10 +172,12 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 	
 	public void abrirFichero(File fichero, String tipo) {
 		try {
+			panelActividad.setVisible(false);
 			GPSParser parser = GPSParserFactory.getParser(tipo);
 			Track track = TrackUtil.toTrack(parser.parse(fichero));
 			datosActividad = new DatosActividad(track);
 	        panelActividad.update(datosActividad);
+			panelActividad.setVisible(true);
 		} catch (Exception e) {
 			logger.error("Error al abrir el fichero", e);
 			JOptionPane.showMessageDialog(null, "No se puede abrir el fichero");
