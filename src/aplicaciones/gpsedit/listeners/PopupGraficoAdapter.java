@@ -22,14 +22,12 @@ public class PopupGraficoAdapter implements ActionListener, PopupMenuListener{
 	
 	public void actionPerformed(ActionEvent evento) {
 		if (ConstantesAcciones.SET_INICIO_RANGO.equals(evento.getActionCommand())) {
-			System.out.println("puntoSeleccionadoPopup:" + puntoSeleccionadoPopup);
 			if (puntoSeleccionadoPopup > datosActividad.getInicioRango() && puntoSeleccionadoPopup < datosActividad.getFinRango()) {
 				datosActividad.setInicioRango(puntoSeleccionadoPopup);
 				listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ConstantesAcciones.CAMBIO_RANGO));
 			}
 		}
 		if (ConstantesAcciones.SET_FIN_RANGO.equals(evento.getActionCommand())) {
-			System.out.println("puntoSeleccionadoPopup:" + puntoSeleccionadoPopup);
 			if (puntoSeleccionadoPopup > datosActividad.getInicioRango() && puntoSeleccionadoPopup < datosActividad.getFinRango()) {
 				datosActividad.setFinRango(puntoSeleccionadoPopup);
 				listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ConstantesAcciones.CAMBIO_RANGO));
@@ -41,7 +39,6 @@ public class PopupGraficoAdapter implements ActionListener, PopupMenuListener{
 	}
 
 	public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-		System.out.println("puntoSeleccionadoPopup:" + datosActividad.getPuntoSeleccionado());
 		puntoSeleccionadoPopup = datosActividad.getPuntoSeleccionado();
 	}
 	public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {

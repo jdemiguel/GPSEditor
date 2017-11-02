@@ -8,7 +8,6 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
 import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
 import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
-import org.apache.log4j.Logger;
 
 import aplicaciones.gpsedit.GPSEdit;
 
@@ -45,7 +44,6 @@ public class DatosGraficaBean {
 	public UnivariateFunction getDatosSuavizados(int suavidad) {
 		if (this.datosSuavizados[suavidad] == null) {
 			double bandwidth = 1f / Math.pow(2, (double)(10.5 - (double)suavidad/2));
-			System.err.println("Suavidad:" + suavidad + ". bandewidth:" + bandwidth);
 			UnivariateInterpolator interpoladorLoess = new LoessInterpolator(bandwidth, 0 );
 			try {
 				this.datosSuavizados[suavidad] = interpoladorLoess.interpolate(getEjeX(), getValores());

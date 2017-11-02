@@ -19,7 +19,6 @@ import aplicaciones.gpsedit.ConstantesAcciones;
 import aplicaciones.gpsedit.GPSEdit;
 import aplicaciones.gpsedit.beans.DatosSegmentoBean;
 import aplicaciones.gpsedit.beans.Seccion;
-import aplicaciones.gpsedit.gps.TrackUtil;
 import aplicaciones.gpsedit.util.UtilidadesFormat;
 
 public class PanelTablaSecciones extends JPanel implements ListSelectionListener{
