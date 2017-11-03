@@ -54,22 +54,22 @@ public class PanelDatosActividad extends JPanel implements ActionListener{
 		    add(velocidadMedLabel);
 	    }
 		
-		if (datosTrack.getCadenciaMed() > 0) {
+		if (track.isCadencia()) {
 	 	    add(cadenciaMedLabel); 
 			cadenciaMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(datosTrack.getCadenciaMed()));
 		}
 		
-		if (datosTrack.getHrMed() > 0) {
+		if (track.isHr()) {
 		    add(hrMedLabel);
 			hrMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(datosTrack.getHrMed()) + " bpm");
 		}
 		
-		if (datosTrack.getPotenciaMed() > 0) {
+		if (track.isPotencia()) {
 		    add(potenciaMedLabel);
 			potenciaMedLabel.setValor(UtilidadesFormat.getIntegerFormat().format(datosTrack.getPotenciaMed()));
 		}
 		
-		if (datosTrack.getAltitudMed() > 0 && track.isHayGPS()) {
+		if (track.isAltitud()) {
 		    add(desnivelAcumuladoLabel); 
 			desnivelAcumuladoLabel.setValor(UtilidadesFormat.getIntegerFormat().format(datosTrack.getDesnivelAcumulado()) + " m");
 			add(coeficienteLabel);

@@ -105,7 +105,6 @@ public class PanelDatosSegmento extends JPanel implements ActionListener{
 	}
 	public void update(DatosActividad datosActividad)  {
 		this.datosActividad = datosActividad;
-		DatosSegmentoBean datosTrack = datosActividad.getDatosTrack();
 		DatosSegmentoBean datosSegmento = datosActividad.getDatosSegmentoActual();
 		if (datosActividad.getTrack().getTipoActividad().isPaso()) {
 			bloquePaso.setVisible(true);
@@ -114,7 +113,7 @@ public class PanelDatosSegmento extends JPanel implements ActionListener{
 			bloquePaso.setVisible(false);
 			bloqueVelocidad.setVisible(true);
 		}
-		if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS()) {
+		if (datosActividad.getTrack().isAltitud()) {
 			bloqueAltitud.setVisible(true);
 			bloqueDesnivel.setVisible(true);
 			bloquePendiente.setVisible(true);
@@ -124,13 +123,13 @@ public class PanelDatosSegmento extends JPanel implements ActionListener{
 			bloquePendiente.setVisible(false);
 		}
 			
-		if (datosTrack.getHrMed() > 0) bloqueHR.setVisible(true);
+		if (datosActividad.getTrack().isHr()) bloqueHR.setVisible(true);
 		else bloqueHR.setVisible(false);
 
-		if (datosTrack.getCadenciaMed() > 0) bloqueCadencia.setVisible(true);
+		if (datosActividad.getTrack().isCadencia()) bloqueCadencia.setVisible(true);
 		else bloqueCadencia.setVisible(false);
 
-		if (datosTrack.getPotenciaMed() > 0) bloquePotencia.setVisible(true);
+		if (datosActividad.getTrack().isPotencia()) bloquePotencia.setVisible(true);
 		else bloquePotencia.setVisible(false);
 
 		setRango(datosActividad.getInicioRango(), datosActividad.getFinRango());

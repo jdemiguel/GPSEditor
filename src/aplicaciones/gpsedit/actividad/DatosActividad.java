@@ -45,8 +45,9 @@ public class DatosActividad {
 
 	
 	public DatosSegmentoBean getDatos(int inicio, int fin)  {
-		
 		List<TrackPoint> puntos = getTrack().getPuntos();
+		if (inicio < 0) inicio = 0;
+		if (fin > puntos.size()-1) fin  = puntos.size()-1;
 		DatosSegmentoBean datosSegmento = new DatosSegmentoBean();
 		if (puntos.size() < 2) return datosSegmento;
 		
@@ -194,9 +195,9 @@ public class DatosActividad {
 		datosSegmento.setVelocidadMed(velocidadMed);
 		datosSegmento.setVelocidadMin(velocidadMin);
 		datosSegmento.setVelocidadMax(velocidadMax);
-		datosSegmento.setPasoMed(3600000.0 / velocidadMed);
-		datosSegmento.setPasoMin(3600000.0 / velocidadMin);
-		datosSegmento.setPasoMax(3600000.0 / velocidadMax);
+		if (velocidadMed > 0) datosSegmento.setPasoMed(3600000.0 / velocidadMed);
+		if (velocidadMin > 0) datosSegmento.setPasoMin(3600000.0 / velocidadMin);
+		if (velocidadMax > 0) datosSegmento.setPasoMax(3600000.0 / velocidadMax);
 		datosSegmento.setPotenciaMed(potenciaMed);
 		datosSegmento.setPotenciaMin(potenciaMin);
 		datosSegmento.setPotenciaMax(potenciaMax);
@@ -376,7 +377,7 @@ public class DatosActividad {
 		if (trackPoint.getVelocidadLeida() > 0) return trackPoint.getPaso();
 		EjeX ejeX = EjeX.getInstanciaEjeDistancia();
 		UnivariateFunction pasosInterpolados = getDatosGrafica(ejeX).getDatosPaso().getDatosSuavizados(9);
-		return pasosInterpolados.value(getValorX(trackPoint, ejeX)) * 60000;
+		return pasosInterpolados.value(getValorX(trackPoint, ejeX));
 	}	
 	
 	public double getVelocidad(int punto)  {
@@ -450,16 +451,16 @@ public class DatosActividad {
 
 	private void setDatosGrafica(EjeX ejeX)  {
 		DatosTodasGraficasBean datosGraficasBean = new DatosTodasGraficasBean();
-    	List<TrackPoint> puntos = actividadBean.getTrack().getPuntos();
+    	List<TrackPoint> puntos = getTrack().getPuntos();
     	for (int i = 0; i< puntos.size(); i++)  {
     		TrackPoint punto = puntos.get(i);
         	double valorX = getValorX(punto, ejeX);
-        	if (punto.getAltitud() > 0 || getDatosSegmentoActual().getAltitudMed() == 0) datosGraficasBean.getDatosAltitud().addDato(valorX, punto.getAltitud());
+        	if (punto.getAltitud() > 0 || !getTrack().isAltitud()) datosGraficasBean.getDatosAltitud().addDato(valorX, punto.getAltitud());
         	datosGraficasBean.getDatosHR().addDato(valorX, punto.getHR());
         	datosGraficasBean.getDatosPendiente().addDato(valorX, punto.getPendienteBruta() * 100.0);
         	datosGraficasBean.getDatosVelocidad().addDato(valorX, punto.getVelocidad());
         	datosGraficasBean.getDatosCadencia().addDato(valorX, punto.getCadencia());
-        	datosGraficasBean.getDatosPaso().addDato(valorX, punto.getPaso() / 60000);
+        	if (punto.getPaso() > 0) datosGraficasBean.getDatosPaso().addDato(valorX, punto.getPaso());
         	datosGraficasBean.getDatosPotencia().addDato(valorX, punto.getPotencia());
     	}
 		if (ejeX.isDistancia()) datosGraficasDistancia = datosGraficasBean;

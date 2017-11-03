@@ -175,6 +175,10 @@ public abstract class GPSParser {
 
 		NodeList secciones = getSecciones(rootNode);
 		boolean hayGPS = false;
+		boolean hayCadencia = false;
+		boolean hayAltitud = false;
+		boolean hayHr = false;
+		boolean hayPotencia = false;
 		for (int i=0; i< secciones.getLength(); i++) {
 			Element nodoSeccion = (Element) secciones.item(i);
 			RawSeccion seccion = new RawSeccion();
@@ -195,6 +199,10 @@ public abstract class GPSParser {
 					punto.setPotencia(getPotencia(nodo));
 					seccion.addPunto(punto);
 					if (punto.getLatitud() != 0) hayGPS = true;
+					if (punto.getCadencia() != 0) hayCadencia = true;
+					if (punto.getAltitud() != 0) hayAltitud = true;
+					if (punto.getHr() != 0) hayHr = true;
+					if (punto.getPotencia() != 0) hayPotencia = true;
 				} catch (Exception e) {
 					GPSEdit.logger.error("Error en punto " + i, e);
 					throw new Exception ("Error al leer un punto");
@@ -207,7 +215,11 @@ public abstract class GPSParser {
 		track.setTipoActividad(getTipoActividad(xml.getDocumentElement()));
 		track.setDescripcion(getDescripcion(xml.getDocumentElement()));
 		track.setCalorias(getCalorias(xml.getDocumentElement()));
-		track.setHayGPS(hayGPS);
+		track.setGPS(hayGPS);
+		track.setCadencia(hayCadencia);
+		track.setAltitud(hayAltitud);
+		track.setHr(hayHr);
+		track.setPotencia(hayPotencia);
 		track.setTipo(getTipo());
 		return track;
 	}

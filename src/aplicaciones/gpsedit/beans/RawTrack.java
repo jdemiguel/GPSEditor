@@ -14,8 +14,11 @@ public class RawTrack {
 	private String descripcion;
 	private long calorias;
 	private Date time;
-	private boolean hayGPS;
-	private boolean hayCadencia;
+	private boolean GPS;
+	private boolean cadencia;
+	private boolean altitud;
+	private boolean hr;
+	private boolean potencia;
 	private File fichero;
 	private String tipo;
 	private boolean grabado;
@@ -82,22 +85,6 @@ public class RawTrack {
 		this.time = time;
 	}
 
-	public boolean isHayGPS() {
-		return hayGPS;
-	}
-
-	public void setHayGPS(boolean hayGPS) {
-		this.hayGPS = hayGPS;
-	}
-
-	public boolean isHayCadencia() {
-		return hayCadencia;
-	}
-
-	public void setHayCadencia(boolean hayCadencia) {
-		this.hayCadencia = hayCadencia;
-	}
-
 	public String getTipo() {
 		return tipo;
 	}
@@ -120,6 +107,46 @@ public class RawTrack {
 
 	public void setGrabado(boolean grabado) {
 		this.grabado = grabado;
+	}
+
+	public boolean isGPS() {
+		return GPS;
+	}
+
+	public boolean isCadencia() {
+		return cadencia;
+	}
+
+	public boolean isPotencia() {
+		return potencia;
+	}
+
+	public void setPotencia(boolean potencia) {
+		this.potencia = potencia;
+	}
+
+	public boolean isAltitud() {
+		return altitud;
+	}
+
+	public boolean isHr() {
+		return hr;
+	}
+
+	public void setGPS(boolean gPS) {
+		GPS = gPS;
+	}
+
+	public void setCadencia(boolean cadencia) {
+		this.cadencia = cadencia;
+	}
+
+	public void setAltitud(boolean altitud) {
+		this.altitud = altitud;
+	}
+
+	public void setHr(boolean hr) {
+		this.hr = hr;
 	}
 	
 	

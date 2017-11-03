@@ -19,6 +19,7 @@ import aplicaciones.gpsedit.ConstantesAcciones;
 import aplicaciones.gpsedit.GPSEdit;
 import aplicaciones.gpsedit.beans.DatosSegmentoBean;
 import aplicaciones.gpsedit.beans.Seccion;
+import aplicaciones.gpsedit.beans.Track;
 import aplicaciones.gpsedit.util.UtilidadesFormat;
 
 public class PanelTablaSecciones extends JPanel implements ListSelectionListener{
@@ -28,7 +29,6 @@ public class PanelTablaSecciones extends JPanel implements ListSelectionListener
 	private JTable tablaDatos = new JTable();
 	private List<Seccion> secciones;
 	private DatosActividad datosActividad;
-	private DatosSegmentoBean datosTrack;
 	private ActionListener listener;
 
 	public PanelTablaSecciones(ActionListener listener)  {
@@ -51,7 +51,7 @@ public class PanelTablaSecciones extends JPanel implements ListSelectionListener
 
 	public void update(DatosActividad datosActividad) {
 		this.datosActividad = datosActividad;
-		datosTrack = datosActividad.getDatosTrack();
+		Track track = datosActividad.getTrack();
 		datosSecciones = new DefaultTableModel(0, 0) {
 			private static final long serialVersionUID = 9106284088842148113L;
 			@Override
@@ -64,21 +64,21 @@ public class PanelTablaSecciones extends JPanel implements ListSelectionListener
 		datosSecciones.addColumn("Lon (km)");
 		datosSecciones.addColumn("Tmp Abs");
 		datosSecciones.addColumn("Tmp Mov");
-		if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS())  {
+		if (track.isAltitud())  {
 			datosSecciones.addColumn("Des Acum");
 			datosSecciones.addColumn("Desnivel");
 		}
-		if (datosTrack.getHrMed() > 0)  {
+		if (track.isHr())  {
 			datosSecciones.addColumn("HR Med(ppm)");
 			datosSecciones.addColumn("HR Mín(ppm)");
 			datosSecciones.addColumn("HR Máx(ppm)");
 		}
-		if (datosTrack.getCadenciaMed() > 0)  {
+		if (track.isCadencia())  {
 			datosSecciones.addColumn("Cad Med");
 			datosSecciones.addColumn("Cad Mín");
 			datosSecciones.addColumn("Cad Máx");
 		}
-		if (datosTrack.getPotenciaMed() > 0)  {
+		if (track.isPotencia())  {
 			datosSecciones.addColumn("Wat Med");
 			datosSecciones.addColumn("Wat Mín");
 			datosSecciones.addColumn("Wat Máx");
@@ -89,7 +89,7 @@ public class PanelTablaSecciones extends JPanel implements ListSelectionListener
 		else datosSecciones.addColumn("Vel Mín(km/h)");
 		if (datosActividad.getTrack().getTipoActividad().isPaso()) datosSecciones.addColumn("Paso Máx(min/km)");
 		else datosSecciones.addColumn("Vel Máx(km/h)");
-		if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS())  {
+		if (track.isAltitud())  {
 			datosSecciones.addColumn("Alt Med(m)");
 			datosSecciones.addColumn("Alt Mín(m)");
 			datosSecciones.addColumn("Alt Máx(m)");
@@ -102,6 +102,7 @@ public class PanelTablaSecciones extends JPanel implements ListSelectionListener
 
 	public void update() {
 		this.secciones = datosActividad.getTrack().getSecciones();
+		Track track = datosActividad.getTrack();
 		if (secciones.size() == 1) secciones = datosActividad.getSeccionesAutomaticas();
 		datosSecciones.setRowCount(0);
 		for (int index = 0; index < secciones.size() ; index++)  {
@@ -113,21 +114,21 @@ public class PanelTablaSecciones extends JPanel implements ListSelectionListener
         	
         	fila.add(UtilidadesFormat.getTiempoFormat().format(datos.getTiempoAbsoluto()));
         	fila.add(UtilidadesFormat.getTiempoFormat().format(datos.getTiempoMovimiento()));
-    		if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS())  {
+    		if (track.isAltitud())  {
     			fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getDesnivelAcumulado()));
     			fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getDesnivelTotal()));
     		}
-    		if (datosTrack.getHrMed() > 0)  {
+    		if (track.isHr())  {
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getHrMed()));
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getHrMin()));
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getHrMax()));
     		}
-    		if (datosTrack.getCadenciaMed() > 0)  {
+    		if (track.isCadencia())  {
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getCadenciaMed()));
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getCadenciaMin()));
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getCadenciaMax()));
     		}
-    		if (datosTrack.getPotenciaMed() > 0)  {
+    		if (track.isPotencia())  {
     			fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getPotenciaMed()));
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getPotenciaMin()));
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getPotenciaMax()));
@@ -138,7 +139,7 @@ public class PanelTablaSecciones extends JPanel implements ListSelectionListener
         	else fila.add(UtilidadesFormat.getDecimalFormat().format(datos.getVelocidadMin()));
         	if (datosActividad.getTrack().getTipoActividad().isPaso()) fila.add(UtilidadesFormat.getPasoFormat().format(datos.getPasoMax()));
         	else fila.add(UtilidadesFormat.getDecimalFormat().format(datos.getVelocidadMax()));
-    		if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS())  {
+    		if (track.isAltitud())  {
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getAltitudMed()));
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getAltitudMin()));
 	        	fila.add(UtilidadesFormat.getIntegerFormat().format(datos.getAltitudMax()));

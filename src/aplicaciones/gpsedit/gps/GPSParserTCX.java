@@ -255,19 +255,13 @@ public class GPSParserTCX extends GPSParser{
 				setNodeValue(document, nodoPunto, "Time", df2.format(punto.getTiempo()));
 				setNodeValue(document, nodoPunto, "LatitudeDegrees", (punto.getLatitud() != 0)?punto.getLatitud():null);
 				setNodeValue(document, nodoPunto, "LongitudeDegrees", (punto.getLongitud() != 0)?punto.getLongitud():null);
-				setNodeValue(document, nodoPunto, "AltitudeMeters", (track.isHayGPS())?UtilidadesMath.round(punto.getAltitud(), 1):null);
+				setNodeValue(document, nodoPunto, "AltitudeMeters", (track.isAltitud())?UtilidadesMath.round(punto.getAltitud(), 1):null);
 				setNodeValue(document, nodoPunto, "DistanceMeters", UtilidadesMath.round(punto.getDistancia(), 1));
 				setNodeValue(document, nodoPunto, "Value", (punto.getHr() != 0)?punto.getHr():null);
-				setNodeValue(document, nodoPunto, "Cadence", (track.isHayCadencia())?punto.getCadencia():null);
+				setNodeValue(document, nodoPunto, "Cadence", (track.isCadencia())?punto.getCadencia():null);
 				setNodeValue(document, nodoPunto, "Speed", UtilidadesMath.round(punto.getVelocidad() / 3.6, 3));
 				setNodeValue(document, nodoPunto, "Watts", (punto.getPotencia() != 0)?punto.getPotencia():null);
-
 			}
-			
-			
-			
 		}
-		
 	}
-	
 }

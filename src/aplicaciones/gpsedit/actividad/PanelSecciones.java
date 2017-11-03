@@ -38,6 +38,7 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import aplicaciones.gpsedit.ConstantesAcciones;
+import aplicaciones.gpsedit.GPSEdit;
 import aplicaciones.gpsedit.beans.DatosSegmentoBean;
 import aplicaciones.gpsedit.beans.Seccion;
 import aplicaciones.gpsedit.config.Configuracion;
@@ -221,6 +222,7 @@ public class PanelSecciones extends JPanel implements ActionListener, ChartMouse
 			datasetCadencia.addValue((double)datos.getCadenciaMed(), "Cadencia", seccion.getTexto());
 			datasetPotencia.addValue((double)datos.getPotenciaMed(), "Potencia", seccion.getTexto());
 			if (datosActividad.getTrack().getTipoActividad().isPaso())  {
+				GPSEdit.logger.debug("pasoMed:" + datos.getPasoMed());
 				datasetVelocidad.addValue((double)datos.getPasoMed(), "Paso", seccion.getTexto());
 			} else {
 				datasetVelocidad.addValue((double)datos.getVelocidadMed(), "Velocidad", seccion.getTexto());

@@ -23,6 +23,10 @@ public class TrackUtil {
 		RawTrack rawTrack = new RawTrack();
 		List<Seccion> secciones = track.getSecciones();
 		boolean hayCadencia = false;
+		boolean hayGPS = false;
+		boolean hayHR = false;
+		boolean hayAltitud = false;
+		boolean hayPotencia = false;
 		for (int numSeccion = 0; numSeccion < secciones.size(); numSeccion++)  {
 			Seccion seccion = secciones.get(numSeccion);
 			RawSeccion rawSeccion = new RawSeccion();
@@ -41,6 +45,10 @@ public class TrackUtil {
 				rawPunto.setVelocidad(punto.getVelocidadLeida());
 				rawSeccion.addPunto(rawPunto);
 				if (punto.getCadencia() > 0)  hayCadencia = true;
+				if (punto.getLatitud() > 0)  hayGPS = true;
+				if (punto.getHR() > 0)  hayHR = true;
+				if (punto.getAltitud() > 0)  hayAltitud = true;
+				if (punto.getPotencia() > 0)  hayPotencia = true;
 			}			
 			rawSeccion.setTriggerMethod(seccion.getTriggerMethod());
 			rawSeccion.setIntensidad(seccion.getIntensidad());
@@ -62,8 +70,11 @@ public class TrackUtil {
 		rawTrack.setDescripcion(track.getDescripcion());
 		rawTrack.setCalorias(track.getCalorias());
 		rawTrack.setTime(track.getPrimero().getHora());
-		rawTrack.setHayGPS(track.isHayGPS());
-		rawTrack.setHayCadencia(hayCadencia);
+		rawTrack.setGPS(hayGPS);
+		rawTrack.setAltitud(hayAltitud);
+		rawTrack.setCadencia(hayCadencia);
+		rawTrack.setHr(hayHR);
+		rawTrack.setPotencia(hayPotencia);
 		
 		rawTrack.setFichero(track.getFichero());
 		rawTrack.setGrabado(track.isGrabado());
@@ -184,9 +195,6 @@ public class TrackUtil {
 		       			velocidad = (double)Math.round((3600.0 * incDistancia * 1000.0 / (double)incTiempo)) / 1000.0;
 		       			pendienteBruta = Math.round((desnivel * 1000.0 / incDistancia)) / 1000.0;
 
-	       				if (Math.abs(pendienteBrutaAnterior - pendienteBruta) > configuracionTrack.getCambioMaximoPendiente()) {
-	       					//pendiente = pendienteAnterior; 
-	       				}
 	       				
 			        	if (velocidad > configuracionTrack.getVelocidadMinima()) tiempoMovimiento = tiempoMovimiento + incTiempo;
 			        	
@@ -198,7 +206,8 @@ public class TrackUtil {
 		        	if (velocidadLeida != 0) punto.setVelocidad(velocidadLeida); 
 		        	else punto.setVelocidad(velocidad);
 		        	punto.setVelocidadCalculada(velocidad);
-		        	punto.setPaso(3600000.0 / punto.getVelocidad());
+		        	if (punto.getVelocidad() > 0) punto.setPaso(3600000.0 / punto.getVelocidad());
+		        	else punto.setPaso(0.0);
 
 					distanciaAnterior = distancia;
 					latitudAnterior = latitud;
@@ -216,7 +225,7 @@ public class TrackUtil {
 				indexPunto++;
 			}			
 			if (seccion.getPuntos().size() > 1) {
-				seccion.setFinRango(indexPunto - 1);
+				seccion.setFinRango(indexPunto - 2);
 				track.addSeccion(seccion);
 			}
 			seccion.setTriggerMethod(rawSeccion.getTriggerMethod());
@@ -229,7 +238,11 @@ public class TrackUtil {
 		track.setNombre(rawTrack.getNombre());
 		track.setDescripcion(rawTrack.getDescripcion());
 		track.setCalorias(rawTrack.getCalorias());
-		track.setHayGPS(rawTrack.isHayGPS());
+		track.setGPS(rawTrack.isGPS());
+		track.setCadencia(rawTrack.isCadencia());
+		track.setAltitud(rawTrack.isAltitud());
+		track.setHr(rawTrack.isHr());
+		track.setPotencia(rawTrack.isPotencia());
 		
 		track.setFichero(rawTrack.getFichero());
 		track.setGrabado(rawTrack.isGrabado());

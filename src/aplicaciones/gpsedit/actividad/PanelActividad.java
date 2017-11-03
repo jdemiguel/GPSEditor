@@ -11,7 +11,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import aplicaciones.gpsedit.ConstantesAcciones;
-import aplicaciones.gpsedit.beans.DatosSegmentoBean;
 import aplicaciones.gpsedit.beans.Track;
 import aplicaciones.gpsedit.config.Configuracion;
 import aplicaciones.gpsedit.config.DialogConfiguracionCoeficientes;
@@ -120,35 +119,34 @@ public class PanelActividad extends JPanel implements ActionListener{
 		this.datosActividad = datosActividad;
 		dialogoProgreso.setDatosActividad(datosActividad);
 		Track track = datosActividad.getTrack();
-		DatosSegmentoBean datosTrack = datosActividad.getDatosTrack();
-		if (datosTrack.getHrMed() == 0) {
+		if (!track.isHr()) {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeHR().setVisible(false);
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionSecciones().getEjeHR().setVisible(false);
 		} else {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeHR().setVisible(true);
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionSecciones().getEjeHR().setVisible(true);
 		}
-		if (datosTrack.getCadenciaMed() == 0) {
+		if (!track.isCadencia()) {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeCadencia().setVisible(false);
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionSecciones().getEjeCadencia().setVisible(false);
 		} else {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeCadencia().setVisible(true);
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionSecciones().getEjeCadencia().setVisible(true);
 		}
-		if (datosTrack.getPotenciaMed() == 0) {
+		if (!track.isPotencia()) {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjePotencia().setVisible(false);
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionSecciones().getEjePotencia().setVisible(false);
 		} else {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjePotencia().setVisible(true);
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionSecciones().getEjePotencia().setVisible(true);
 		}
-		if (!track.isHayGPS() || datosTrack.getAltitudMed() == 0)  {
+		if (!track.isAltitud())  {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeAltitud().setVisible(false);
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeAltitud().setRelleno(false);
 		} else {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeAltitud().setVisible(true);
 		}
-		if (datosTrack.getPendienteMed() == 0)  {
+		if (!track.isAltitud())  {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjePendiente().setVisible(false);
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeAltitud().setRelleno(false);
 		} else {
@@ -156,8 +154,8 @@ public class PanelActividad extends JPanel implements ActionListener{
 		}		
 		StringBuffer titulo = new StringBuffer();
 		if (datosActividad.getTrack().getNombre() != null) titulo.append(track.getNombre());
-		if (titulo.length() > 0) titulo.append(" (" + UtilidadesFormat.getFechaFormat().format(datosTrack.getHoraInicio()) + ")");
-		else titulo.append(UtilidadesFormat.getFechaFormat().format(datosTrack.getHoraInicio()));
+		if (titulo.length() > 0) titulo.append(" (" + UtilidadesFormat.getFechaFormat().format(track.getPrimero().getHora()) + ")");
+		else titulo.append(UtilidadesFormat.getFechaFormat().format(track.getPrimero().getHora()));
 		tituloLabel.setText(titulo.toString());
 		panelTablaSecciones.update(datosActividad);
 		panelDatosActividad.update(datosActividad);

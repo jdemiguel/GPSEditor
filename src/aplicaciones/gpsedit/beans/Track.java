@@ -16,21 +16,16 @@ public class Track {
 	private Dispositivo dispositivo;
 	private String descripcion;
 	private long calorias;
-	private boolean hayGPS;
-	
+	private boolean GPS;
+	private boolean cadencia;
+	private boolean altitud;
+	private boolean hr;
+	private boolean potencia;
+
 	private File fichero;
 	private String tipo;
 	private boolean grabado;
 
-
-	public boolean isHayGPS() {
-		return hayGPS;
-	}
-
-	public void setHayGPS(boolean hayGPS) {
-		this.hayGPS = hayGPS;
-	}
-	
 	public TrackPoint getPrimero() {
 		TrackPoint primero = null;
 		if (getPuntos().size() > 0) primero = puntos.get(0);
@@ -142,6 +137,46 @@ public class Track {
 		this.fichero = fichero;
 	}
 	
+	public boolean isPotencia() {
+		return potencia;
+	}
+
+	public void setPotencia(boolean potencia) {
+		this.potencia = potencia;
+	}
+
+	public boolean isGPS() {
+		return GPS;
+	}
+
+	public boolean isCadencia() {
+		return cadencia;
+	}
+
+	public boolean isAltitud() {
+		return altitud;
+	}
+
+	public boolean isHr() {
+		return hr;
+	}
+
+	public void setGPS(boolean gPS) {
+		GPS = gPS;
+	}
+
+	public void setCadencia(boolean cadencia) {
+		this.cadencia = cadencia;
+	}
+
+	public void setAltitud(boolean altitud) {
+		this.altitud = altitud;
+	}
+
+	public void setHr(boolean hr) {
+		this.hr = hr;
+	}
+
 	public Track clone()  {
 		Track track = new Track();
 		track.setAutor(autor.clone());
@@ -150,7 +185,10 @@ public class Track {
 		track.setDispositivo(dispositivo.clone());
 		track.setFichero(new File(fichero.getAbsolutePath()));
 		track.setGrabado(grabado);
-		track.setHayGPS(hayGPS);
+		track.setAltitud(altitud);
+		track.setCadencia(cadencia);
+		track.setGPS(GPS);
+		track.setHr(hr);
 		track.setNombre(nombre);
 		track.setTipo(tipo);
 		track.setTipoActividad(tipoActividad);

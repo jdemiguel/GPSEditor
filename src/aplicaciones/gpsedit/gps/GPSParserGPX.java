@@ -208,10 +208,10 @@ public class GPSParserGPX extends GPSParser{
 
 				
 				setNodeValue(document, nodoPunto, "time", df2.format(punto.getTiempo()));
-				setNodeValue(document, nodoPunto, "ele", (track.isHayGPS())?UtilidadesMath.round(punto.getAltitud(), 1):null);
+				setNodeValue(document, nodoPunto, "ele", (track.isAltitud())?UtilidadesMath.round(punto.getAltitud(), 1):null);
 //				setNodeValue(document, nodoPunto, "DistanceMeters", UtilidadesMath.round(punto.getDistancia(), 1));
 				setNodeValue(document, nodoPunto, "gpxtpx:hr", (punto.getHr() != 0)?punto.getHr():null);
-				setNodeValue(document, nodoPunto, "gpxtpx:cad", (track.isHayCadencia())?punto.getCadencia():null);
+				setNodeValue(document, nodoPunto, "gpxtpx:cad", (track.isCadencia())?punto.getCadencia():null);
 				setNodeValue(document, nodoPunto, "power", (punto.getPotencia() != 0)?punto.getPotencia():null);
 
 				

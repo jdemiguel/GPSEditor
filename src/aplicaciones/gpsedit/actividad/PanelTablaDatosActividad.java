@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import aplicaciones.gpsedit.ConstantesAcciones;
-import aplicaciones.gpsedit.beans.DatosSegmentoBean;
+import aplicaciones.gpsedit.beans.Track;
 import aplicaciones.gpsedit.beans.TrackPoint;
 import aplicaciones.gpsedit.util.UtilidadesFormat;
 
@@ -52,9 +52,9 @@ public class PanelTablaDatosActividad extends JPanel implements ListSelectionLis
 	
 	public void update(DatosActividad datosActividad) {
 		this.datosActividad = datosActividad;
-		DatosSegmentoBean datosTrack = datosActividad.getDatosTrack();
+		Track track = datosActividad.getTrack();
 		inicio = 0;
-		int fin = datosActividad.getTrack().getPuntos().size() - 1;
+		int fin = track.getPuntos().size() - 1;
 		if (soloSegmento)  {
 			inicio = datosActividad.getInicioRango();
 			fin = datosActividad.getFinRango();
@@ -72,23 +72,27 @@ public class PanelTablaDatosActividad extends JPanel implements ListSelectionLis
 	    datosGPS.addColumn("Tiempo en movimiento");
 		datosGPS.addColumn("Distancia (m)");
 		datosGPS.addColumn("Dist. leida (m)");
-		if (datosActividad.getTrack().isHayGPS()) datosGPS.addColumn("Dist. calc (m)");
-		if (datosTrack.getHrMed() > 0) datosGPS.addColumn("HR (ppm)");
-		if (datosTrack.getCadenciaMed() > 0) datosGPS.addColumn("Cadencia");
-		if (datosTrack.getPotenciaMed() > 0) datosGPS.addColumn("Potencia");
-		if (datosActividad.getTrack().getTipoActividad().isPaso()) datosGPS.addColumn("Paso (min/km)");
+		if (track.isGPS()) datosGPS.addColumn("Dist. calc (m)");
+		if (track.isHr()) datosGPS.addColumn("HR (ppm)");
+		if (track.isCadencia()) datosGPS.addColumn("Cadencia");
+		if (track.isPotencia()) datosGPS.addColumn("Potencia");
+		if (track.getTipoActividad().isPaso()) datosGPS.addColumn("Paso (min/km)");
 		else datosGPS.addColumn("Velocidad (km/h)");
-		if (!datosActividad.getTrack().getTipoActividad().isPaso()) {
+		if (!track.getTipoActividad().isPaso()) {
 			datosGPS.addColumn("Velocidad leida (km/h)");
 			datosGPS.addColumn("Velocidad calc (km/h)");
 		}
-		if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS()) datosGPS.addColumn("Altitud (m)");
-		if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS()) datosGPS.addColumn("Pendiente");
-		if (datosActividad.getTrack().isHayGPS()) datosGPS.addColumn("Latitud");
-		if (datosActividad.getTrack().isHayGPS()) datosGPS.addColumn("Longitud");
+		if (track.isAltitud()) {
+			datosGPS.addColumn("Altitud (m)");
+			datosGPS.addColumn("Pendiente");
+		}
+		if (track.isGPS()) {
+			datosGPS.addColumn("Latitud");
+			datosGPS.addColumn("Longitud");
+		}
 		tablaDatos.setModel(datosGPS);
 		
-		List<TrackPoint> puntos = datosActividad.getTrack().getPuntos();
+		List<TrackPoint> puntos = track.getPuntos();
 		for (int i = inicio; i <= fin ; i++)  {
 			TrackPoint punto = puntos.get(i);
         	Vector<String> fila = new Vector<String>();
@@ -98,20 +102,24 @@ public class PanelTablaDatosActividad extends JPanel implements ListSelectionLis
         	fila.add(UtilidadesFormat.getTiempoFormat().format(punto.getTiempoMovimiento()));
         	fila.add(UtilidadesFormat.getDecimalFormat().format(punto.getDistancia()));
         	fila.add(UtilidadesFormat.getFloatFormat().format(punto.getDistanciaLeida()));
-        	if (datosActividad.getTrack().isHayGPS()) fila.add(UtilidadesFormat.getFloatFormat().format(punto.getDistanciaCalculada()));
-    		if (datosTrack.getHrMed() > 0) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getHR()));
-    		if (datosTrack.getCadenciaMed() > 0) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getCadencia()));
-    		if (datosTrack.getPotenciaMed() > 0) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getPotencia()));
-        	if (datosActividad.getTrack().getTipoActividad().isPaso()) fila.add(UtilidadesFormat.getPasoFormat().format(datosActividad.getPaso(i)));
+        	if (track.isGPS()) fila.add(UtilidadesFormat.getFloatFormat().format(punto.getDistanciaCalculada()));
+    		if (track.isHr()) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getHR()));
+    		if (track.isCadencia()) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getCadencia()));
+    		if (track.isPotencia()) fila.add(UtilidadesFormat.getIntegerFormat().format(punto.getPotencia()));
+        	if (track.getTipoActividad().isPaso()) fila.add(UtilidadesFormat.getPasoFormat().format(datosActividad.getPaso(i)));
         	else fila.add(UtilidadesFormat.getDecimalFormat().format(datosActividad.getVelocidad(i)));
-        	if (!datosActividad.getTrack().getTipoActividad().isPaso()) {
+        	if (!track.getTipoActividad().isPaso()) {
         		fila.add(UtilidadesFormat.getDecimalFormat().format(punto.getVelocidadLeida()));
         		fila.add(UtilidadesFormat.getDecimalFormat().format(punto.getVelocidadCalculada()));
         	}
-        	if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS()) fila.add(UtilidadesFormat.getDecimalFormat().format(punto.getAltitud()));
-        	if (datosTrack.getAltitudMed() > 0 && datosActividad.getTrack().isHayGPS()) fila.add(UtilidadesFormat.getPercentFormat().format(datosActividad.getPendiente(i)));
-        	if (datosActividad.getTrack().isHayGPS()) fila.add(UtilidadesFormat.getDoubleFormat().format(punto.getLatitud()));
-        	if (datosActividad.getTrack().isHayGPS()) fila.add(UtilidadesFormat.getDoubleFormat().format(punto.getLongitud()));
+        	if (track.isAltitud()) {
+        		fila.add(UtilidadesFormat.getDecimalFormat().format(punto.getAltitud()));
+        		fila.add(UtilidadesFormat.getPercentFormat().format(datosActividad.getPendiente(i)));
+        	}
+        	if (track.isGPS()) {
+        		fila.add(UtilidadesFormat.getDoubleFormat().format(punto.getLatitud()));
+            	fila.add(UtilidadesFormat.getDoubleFormat().format(punto.getLongitud()));
+        	}
         	datosGPS.addRow(fila);
 		}
 	}
