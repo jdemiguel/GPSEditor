@@ -213,14 +213,36 @@ public class GPSParserGPX extends GPSParser{
 				setNodeValue(document, nodoPunto, "gpxtpx:hr", (punto.getHr() != 0)?punto.getHr():null);
 				setNodeValue(document, nodoPunto, "gpxtpx:cad", (track.isCadencia())?punto.getCadencia():null);
 				setNodeValue(document, nodoPunto, "power", (punto.getPotencia() != 0)?punto.getPotencia():null);
-
-				
-
-				
 			}
 		}
+	}
 
-		
+	public long getTiempoTotalSeccion(Element nodo) {
+		return 0;
+	}
+
+	public double getLongitudSeccion(Element nodo) {
+		return 0.0;
+	}
+
+	public double getVelocidadMaximaSeccion(Element nodo) {
+		return 0.0;
+	}
+
+	public double getVelocidadMedSeccion(Element nodo) {
+		return 0.0;
+	}
+
+	public long getHRMedSeccion(Element nodo) {
+		return 0;
+	}
+
+	public long getHRMaxSeccion(Element nodo) {
+		return 0;
+	}
+
+	public long getCadenciaMedSeccion(Element nodo) {
+		return 0;
 	}
 	
 }

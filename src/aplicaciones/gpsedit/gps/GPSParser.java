@@ -48,6 +48,14 @@ public abstract class GPSParser {
 	public abstract double getDistancia(Element nodo);
 	public abstract Date getTiempo(Element nodo) throws DOMException, ParseException;
 
+	public abstract long getTiempoTotalSeccion(Element nodo);
+	public abstract double getLongitudSeccion(Element nodo);
+	public abstract double getVelocidadMaximaSeccion(Element nodo);
+	public abstract double getVelocidadMedSeccion(Element nodo);
+	public abstract long getHRMedSeccion(Element nodo);
+	public abstract long getHRMaxSeccion(Element nodo);
+	public abstract long getCadenciaMedSeccion(Element nodo);
+	
 	public abstract String getTriggerMethod(Element nodo);
 	public abstract String getIntensidad(Element nodo);
 
@@ -182,6 +190,15 @@ public abstract class GPSParser {
 		for (int i=0; i< secciones.getLength(); i++) {
 			Element nodoSeccion = (Element) secciones.item(i);
 			RawSeccion seccion = new RawSeccion();
+			
+			seccion.setCadenciaMed(getCadenciaMedSeccion(nodoSeccion));
+			seccion.setHRMax(getHRMaxSeccion(nodoSeccion));
+			seccion.setHRMed(getHRMedSeccion(nodoSeccion));
+			seccion.setLongitud(getLongitudSeccion(nodoSeccion));
+			seccion.setTiempoTotal(getTiempoTotalSeccion(nodoSeccion));
+			seccion.setVelocidadMaxima(getVelocidadMaximaSeccion(nodoSeccion));
+			seccion.setVelocidadMed(getVelocidadMedSeccion(nodoSeccion));
+			
 			track.addSeccion(seccion);
 			NodeList nodos = getPuntos(nodoSeccion);
 			for (int j = 0; j< nodos.getLength(); j++)  {

@@ -79,6 +79,34 @@ public class GPSParserTCX extends GPSParser{
 	public String getIntensidad(Element nodo) {
 		return getStringNodo(nodo, "Intensity");
 	}
+	
+	public long getTiempoTotalSeccion(Element nodo) {
+		return getLongNodo(nodo, "TotalTimeSeconds");
+	}
+
+	public double getLongitudSeccion(Element nodo) {
+		return getDoubleNodo(nodo, "DistanceMeters");
+	}
+
+	public double getVelocidadMaximaSeccion(Element nodo) {
+		return getDoubleNodo(nodo, "MaximumSpeed");
+	}
+
+	public double getVelocidadMedSeccion(Element nodo) {
+		return getDoubleNodo(nodo, "AvgSpeed");
+	}
+
+	public long getHRMedSeccion(Element nodo) {
+		return getLongNodo(nodo, "AverageHeartRateBpm");
+	}
+
+	public long getHRMaxSeccion(Element nodo) {
+		return getLongNodo(nodo, "MaximumHeartRateBpm");
+	}
+
+	public long getCadenciaMedSeccion(Element nodo) {
+		return getLongNodo(nodo, "Cadence");
+	}
 
 	public Dispositivo getDispositivo(Element nodo)  {
 		Dispositivo dispositivo = null;
@@ -209,9 +237,6 @@ public class GPSParserTCX extends GPSParser{
 			nodo.getParentNode().removeChild(nodo);
 		}
 	}
-
-
-
 	
 	public String getNombrePlantilla() {
 		return GPSParser.PLANTILLA_TCX;
@@ -221,27 +246,22 @@ public class GPSParserTCX extends GPSParser{
 		return GPSParser.TCX;
 	}
 
-
 	public void insertaSecciones(Document document, RawTrack track) {
-		
 		Element nodoSeccionPlantilla = (Element)document.getElementsByTagName("Lap").item(0);
 		Node padreSecciones = nodoSeccionPlantilla.getParentNode();
 		nodoSeccionPlantilla.getParentNode().removeChild(nodoSeccionPlantilla);
-		
-
-		
 		for (RawSeccion seccion:track.getSecciones())  {
 			Element nodoSeccion = (Element) nodoSeccionPlantilla.cloneNode(true);
 			padreSecciones.appendChild(nodoSeccion);
 			
-			setNodeValue(document, nodoSeccion, "TotalTimeSeconds", Math.round(seccion.getTiempoTotal() / 1000));
-			setNodeValue(document, nodoSeccion, "DistanceMeters", UtilidadesMath.round(seccion.getLongitud(), 1));
-			setNodeValue(document, nodoSeccion, "MaximumSpeed",UtilidadesMath.round(seccion.getVelocidadMaxima() / 3.6, 3)); 
-			setNodeValue(document, nodoSeccion, "AvgSpeed", UtilidadesMath.round(seccion.getVelocidadMed() / 3.6, 3)); 
-			setNodeValue(document, nodoSeccion, "AverageHeartRateBpm", seccion.getHRMed());
-			setNodeValue(document, nodoSeccion, "MaximumHeartRateBpm", seccion.getHRMax());
+			if (seccion.getTiempoTotal() > 0) setNodeValue(document, nodoSeccion, "TotalTimeSeconds", Math.round(seccion.getTiempoTotal() / 1000));
+			if (seccion.getLongitud() > 0) setNodeValue(document, nodoSeccion, "DistanceMeters", UtilidadesMath.round(seccion.getLongitud(), 1));
+			if (seccion.getVelocidadMaxima() > 0) setNodeValue(document, nodoSeccion, "MaximumSpeed",UtilidadesMath.round(seccion.getVelocidadMaxima() / 3.6, 3)); 
+			if (seccion.getVelocidadMed() > 0) setNodeValue(document, nodoSeccion, "AvgSpeed", UtilidadesMath.round(seccion.getVelocidadMed() / 3.6, 3)); 
+			if (seccion.getHRMed() > 0) setNodeValue(document, nodoSeccion, "AverageHeartRateBpm", seccion.getHRMed());
+			if (seccion.getHRMax() > 0) setNodeValue(document, nodoSeccion, "MaximumHeartRateBpm", seccion.getHRMax());
+			if (seccion.getCadenciaMed() > 0) setNodeValue(document, nodoSeccion, "Cadence", seccion.getCadenciaMed());
 			setNodeValue(document, nodoSeccion, "Intensity", seccion.getIntensidad());
-			setNodeValue(document, nodoSeccion, "Cadence", seccion.getCadenciaMed());
 			setNodeValue(document, nodoSeccion, "TriggerMethod", seccion.getTriggerMethod());
 
 			Element nodoPuntoPlantilla = (Element)nodoSeccion.getElementsByTagName("Trackpoint").item(0);

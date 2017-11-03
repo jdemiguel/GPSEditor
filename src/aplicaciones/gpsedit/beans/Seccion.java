@@ -11,14 +11,14 @@ public class Seccion {
 	private String triggerMethod;
 	private String intensidad;
 	
-	
-	//rawSeccion.setCadenciaMed(seccion.getDatos().getCadenciaMed());
-	//rawSeccion.setLongitud(seccion.getDatos().getLongitud());			
-	//rawSeccion.setHRMax(seccion.getDatos().getHrMax());
-	//rawSeccion.setHRMed(seccion.getDatos().getHrMed());
-	//rawSeccion.setTiempoTotal(seccion.getDatos().getTiempoAbsoluto());
-	//rawSeccion.setVelocidadMaxima(seccion.getDatos().getVelocidadMax());
-	//rawSeccion.setVelocidadMed(seccion.getDatos().getVelocidadMed());
+	private long tiempoTotal;
+	private double longitud;
+	private double velocidadMaxima;
+	private double velocidadMed;
+	private long HRMed;
+	private long HRMax;
+	private long cadenciaMed;
+
 	
 	public List<TrackPoint> getPuntos() {
 		return puntos;
@@ -69,6 +69,48 @@ public class Seccion {
 		if (puntos.size() > 0) removePunto(puntos.get(puntos.size() - 1));
 	}
 	
+	public long getTiempoTotal() {
+		return tiempoTotal;
+	}
+	public double getLongitud() {
+		return longitud;
+	}
+	public double getVelocidadMaxima() {
+		return velocidadMaxima;
+	}
+	public double getVelocidadMed() {
+		return velocidadMed;
+	}
+	public long getHRMed() {
+		return HRMed;
+	}
+	public long getHRMax() {
+		return HRMax;
+	}
+	public long getCadenciaMed() {
+		return cadenciaMed;
+	}
+	public void setTiempoTotal(long tiempoTotal) {
+		this.tiempoTotal = tiempoTotal;
+	}
+	public void setLongitud(double longitud) {
+		this.longitud = longitud;
+	}
+	public void setVelocidadMaxima(double velocidadMaxima) {
+		this.velocidadMaxima = velocidadMaxima;
+	}
+	public void setVelocidadMed(double velocidadMed) {
+		this.velocidadMed = velocidadMed;
+	}
+	public void setHRMed(long hRMed) {
+		HRMed = hRMed;
+	}
+	public void setHRMax(long hRMax) {
+		HRMax = hRMax;
+	}
+	public void setCadenciaMed(long cadenciaMed) {
+		this.cadenciaMed = cadenciaMed;
+	}
 	public Seccion clone()  {
 		Seccion seccion = new Seccion();
 		
@@ -77,6 +119,14 @@ public class Seccion {
 		seccion.setIntensidad(intensidad);
 		seccion.setTexto(texto);
 		seccion.setTriggerMethod(triggerMethod);
+		
+		seccion.setCadenciaMed(cadenciaMed);
+		seccion.setHRMax(HRMax);
+		seccion.setHRMed(HRMed);
+		seccion.setLongitud(longitud);
+		seccion.setTiempoTotal(tiempoTotal);
+		seccion.setVelocidadMaxima(velocidadMaxima);
+		seccion.setVelocidadMed(velocidadMed);
 
 		for (TrackPoint punto:puntos) seccion.addPunto(punto.clone());
 		return seccion;
