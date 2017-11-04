@@ -4,6 +4,7 @@ package aplicaciones.gpsedit;
 import java.awt.AWTEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -13,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -70,9 +72,9 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 
 		this.thread.start();
 		enableEvents(AWTEvent.KEY_EVENT_MASK);
-		File fichero = new File("d:\\tmp\\cycling\\2017-01-22 840650415 Race cycling Strsava.tcx");
+		//File fichero = new File("d:\\tmp\\cycling\\2017-01-22 840650415 Race cycling Strsava.tcx");
 		try {
-			abrirFichero(fichero, UtilidadesFicheros.getTipo(fichero));
+			//abrirFichero(fichero, UtilidadesFicheros.getTipo(fichero));
 		} catch (Exception e) {
 		}
 
@@ -81,6 +83,7 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 	private	void crearComponentes()	 {
 	
 		panelActividad = new PanelActividad();
+		panelActividad.setVisible(false);
 
 		getContentPane().add(panelActividad);
 		//creamos los menus
@@ -94,23 +97,28 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 		
 		jmenuItem = new JMenuItem("Abrir");
 		jmenuItem.setActionCommand(ConstantesAcciones.MENU_ABRIR);
+		jmenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 		jmenuItem.addActionListener(this);
 		menu.add(jmenuItem);
 		jmenuItem = new JMenuItem("Guardar");
 		jmenuItem.setActionCommand(ConstantesAcciones.MENU_GUARDAR);
+		jmenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
 		jmenuItem.addActionListener(this);
 		menu.add(jmenuItem);
 		jmenuItem = new JMenuItem("Guardar como");
 		jmenuItem.setActionCommand(ConstantesAcciones.MENU_GUARDAR_COMO);
+		jmenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
 		jmenuItem.addActionListener(this);
 		menu.add(jmenuItem);
 		jmenuItem = new JMenuItem("Cerrar");
 		jmenuItem.setActionCommand(ConstantesAcciones.MENU_CERRAR);
+		jmenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
 		jmenuItem.addActionListener(this);
 		menu.add(jmenuItem);
 		menu.addSeparator();
 		jmenuItem = new JMenuItem("Salir");
 		jmenuItem.setActionCommand(ConstantesAcciones.MENU_SALIR);
+		jmenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
 		jmenuItem.addActionListener(this);
 		menu.add(jmenuItem);
 		menuBar.add(menu);
@@ -185,6 +193,7 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 	}
 
 	public void cerrar()  {
+		panelActividad.setVisible(false);
 	}
 	
 	

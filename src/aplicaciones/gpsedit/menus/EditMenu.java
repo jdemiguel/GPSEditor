@@ -1,7 +1,11 @@
 package aplicaciones.gpsedit.menus;
 
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 import aplicaciones.gpsedit.ConstantesAcciones;
 import aplicaciones.gpsedit.actividad.DialogProgreso;
@@ -14,18 +18,21 @@ public class EditMenu extends JMenu{
 	public EditMenu(PanelActividad panelActividad) {
 		DialogProgreso dialogProgreso = panelActividad.getDialogoProgreso();
 		setText("Edición");
-		JMenuItem jmenuItem = new JMenuItem("Deshacer (Ctrl+Z)");
+		JMenuItem jmenuItem = new JMenuItem("Deshacer");
 		jmenuItem.setActionCommand(ConstantesAcciones.DESHACER);
+		jmenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
 		jmenuItem.addActionListener(dialogProgreso);
 		add(jmenuItem);	
-		jmenuItem = new JMenuItem("Rehacer (Ctrl+Y)");
+		jmenuItem = new JMenuItem("Rehacer");
 		jmenuItem.setActionCommand(ConstantesAcciones.REHACER);
+		jmenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK));
 		jmenuItem.addActionListener(dialogProgreso);
 		add(jmenuItem);	
 		addSeparator();
 		JMenu menuBorrado = new JMenu("Borrar");
 		jmenuItem = new JMenuItem("Todos los puntos seleccionados");
 		jmenuItem.setActionCommand(ConstantesAcciones.DELETE_ALL);
+		jmenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		jmenuItem.addActionListener(dialogProgreso);
 		menuBorrado.add(jmenuItem);
 		jmenuItem = new JMenuItem("Datos de altitud");

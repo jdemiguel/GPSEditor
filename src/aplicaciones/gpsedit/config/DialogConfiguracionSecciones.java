@@ -37,7 +37,7 @@ public class DialogConfiguracionSecciones extends JDialog implements ActionListe
 		configuracion = Configuracion.getInstance().getConfiguracionActividad().getConfiguracionSecciones();
 		setBackground(Color.WHITE);
 		this.listener = listener;
-		setTitle("Configuración Gráficas");
+		setTitle("Configuración Secciones");
 		setLayout(null);
 		setBounds(0, 0, 380, 540);
 		setModal(true);
