@@ -373,48 +373,71 @@ public class DatosActividad {
 	}
 	
 	public double getPaso(int punto)  {
+		double paso = 0.0;
 		TrackPoint trackPoint = getTrack().getPuntos().get(punto);
 		if (trackPoint.getVelocidadLeida() > 0) return trackPoint.getPaso();
 		EjeX ejeX = EjeX.getInstanciaEjeDistancia();
 		UnivariateFunction pasosInterpolados = getDatosGrafica(ejeX).getDatosPaso().getDatosSuavizados(9);
-		return pasosInterpolados.value(getValorX(trackPoint, ejeX));
+		try  {
+			paso = pasosInterpolados.value(getValorX(trackPoint, ejeX));
+		} catch (Exception e)  {}
+		return paso;
 	}	
 	
 	public double getVelocidad(int punto)  {
+		double velocidad = 0.0;
 		TrackPoint trackPoint = getTrack().getPuntos().get(punto);
 		if (trackPoint.getVelocidadLeida() > 0) return trackPoint.getVelocidadLeida();
 		EjeX ejeX = EjeX.getInstanciaEjeDistancia();
 		UnivariateFunction velocidadesInterpoladas = getDatosGrafica(ejeX).getDatosVelocidad().getDatosSuavizados(9);
-		return velocidadesInterpoladas.value(getValorX(trackPoint, ejeX));
+		try  {
+			velocidad = velocidadesInterpoladas.value(getValorX(trackPoint, ejeX));
+		} catch (Exception e)  {}
+		return velocidad;
 	}
 	
 	public double getPendiente(int punto)  {
+		double pendiente = 0.0;
 		EjeX ejeX = EjeX.getInstanciaEjeDistancia();
 		UnivariateFunction pendientesInterpoladas = getDatosGrafica(ejeX).getDatosPendiente().getDatosSuavizados(9);
-		return pendientesInterpoladas.value(getValorX(getTrack().getPuntos().get(punto), ejeX)) / 100.0;
+		try  {
+			pendiente = pendientesInterpoladas.value(getValorX(getTrack().getPuntos().get(punto), ejeX)) / 100.0;
+		} catch (Exception e)  {}
+		return pendiente;
 	}
 
 	public List<SegmentoCoeficiente> getSegmentosCoeficienteAPMRango()  {
-		return getSegmentosCoeficienteAPM(getPuntoInicioRango().getDistancia(), getPuntoFinRango().getDistancia());
+		return getSegmentosCoeficienteAPM(getInicioRango(), getFinRango());
 	}
 	
 	private double getCoeficienteAPMRango()  {
-		return getCoeficienteAPM(getPuntoInicioRango().getDistancia(), getPuntoFinRango().getDistancia());
+		return getCoeficienteAPM(getInicioRango(), getFinRango());
 	}
 
 	public double getCoeficienteAPMTotal()  {
-		return getCoeficienteAPM(getTrack().getPrimero().getDistancia(), getTrack().getUltimo().getDistancia());
+		return getCoeficienteAPM(0, getTrack().getPuntos().size()-1);
 	}
-
 	
-	private double getCoeficienteAPM(double posicionInicial, double posicionFinal)  {
-		List<SegmentoCoeficiente> segmentos = getSegmentosCoeficienteAPM(posicionInicial, posicionFinal);
+	private double getCoeficienteAPM(int inicioRango, int finRango)  {
+		List<SegmentoCoeficiente> segmentos = getSegmentosCoeficienteAPM(inicioRango, finRango);
 		double coeficienteAcumulado = 0;
 		for (SegmentoCoeficiente segmento:segmentos) coeficienteAcumulado += segmento.getCoeficiente();
         return coeficienteAcumulado;
 	}
 	
-	private List<SegmentoCoeficiente> getSegmentosCoeficienteAPM(double posicionInicial, double posicionFinal)  {
+	private List<SegmentoCoeficiente> getSegmentosCoeficienteAPM(int inicioRango, int finRango)  {
+		double posicionInicial = 0.0;
+		double posicionFinal = 0.0;
+		List<TrackPoint> puntos = getTrack().getPuntos();
+		for (int index  = inicioRango; index <= finRango; index++)  {
+			if (posicionInicial == 0.0 && puntos.get(index).getAltitud() != 0) {
+				posicionInicial = puntos.get(index).getDistancia();
+			}
+			if (puntos.get(index).getAltitud() != 0) {
+				posicionFinal = puntos.get(index).getDistancia();
+			}
+		} 
+		
 		List<SegmentoCoeficiente> segmentos = new ArrayList<SegmentoCoeficiente>();
 		try  {
 			int intervalo = Configuracion.getInstance().getConfiguracionActividad().getConfiguracionCoeficientes().getIntervalo();
@@ -455,9 +478,11 @@ public class DatosActividad {
     	for (int i = 0; i< puntos.size(); i++)  {
     		TrackPoint punto = puntos.get(i);
         	double valorX = getValorX(punto, ejeX);
-        	if (punto.getAltitud() > 0 || !getTrack().isAltitud()) datosGraficasBean.getDatosAltitud().addDato(valorX, punto.getAltitud());
+        	if (punto.getAltitud() > 0 || !getTrack().isAltitud()) {
+        		datosGraficasBean.getDatosAltitud().addDato(valorX, punto.getAltitud());
+            	datosGraficasBean.getDatosPendiente().addDato(valorX, punto.getPendienteBruta() * 100.0);
+        	}
         	datosGraficasBean.getDatosHR().addDato(valorX, punto.getHR());
-        	datosGraficasBean.getDatosPendiente().addDato(valorX, punto.getPendienteBruta() * 100.0);
         	datosGraficasBean.getDatosVelocidad().addDato(valorX, punto.getVelocidad());
         	datosGraficasBean.getDatosCadencia().addDato(valorX, punto.getCadencia());
         	if (punto.getPaso() > 0) datosGraficasBean.getDatosPaso().addDato(valorX, punto.getPaso());

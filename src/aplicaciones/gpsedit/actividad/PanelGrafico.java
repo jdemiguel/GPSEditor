@@ -44,6 +44,7 @@ public class PanelGrafico extends JPanel implements ChartMouseListener, AxisChan
 	private Grafica graficaHR;
 	private Grafica graficaCadencia;
 	private Grafica graficaVelocidad;
+	private Grafica graficaPaso;
 	private Grafica graficaPendiente;
 	private Grafica graficaPotencia;
 	private ArrayList<Grafica> graficas;
@@ -81,17 +82,19 @@ public class PanelGrafico extends JPanel implements ChartMouseListener, AxisChan
 
         graficas = new ArrayList<Grafica>();
         
-		graficaAltitud = new Grafica("Alt.", configuracion.getEjeAltitud());
-		graficaHR = new Grafica( "HR", configuracion.getEjeHR());
-		graficaCadencia = new Grafica("Cad.", configuracion.getEjeCadencia());
-		graficaVelocidad = new Grafica("Vel./Paso", configuracion.getEjeVelocidad());
-		graficaPendiente= new Grafica("Pte.", configuracion.getEjePendiente());
-		graficaPotencia = new Grafica("Watt", configuracion.getEjePotencia());
+		graficaAltitud = new Grafica("Alt.", configuracion.getEjeAltitud(), new NumberAxis());
+		graficaHR = new Grafica( "HR", configuracion.getEjeHR(), new NumberAxis());
+		graficaCadencia = new Grafica("Cad.", configuracion.getEjeCadencia(), new NumberAxis());
+		graficaVelocidad = new Grafica("Vel.", configuracion.getEjeVelocidad(), new NumberAxis());
+		graficaPaso = new Grafica("Paso", configuracion.getEjeVelocidad(), new DateAxis());
+		graficaPendiente= new Grafica("Pte.", configuracion.getEjePendiente(), new NumberAxis());
+		graficaPotencia = new Grafica("Watt", configuracion.getEjePotencia(), new NumberAxis());
 		
 		graficas.add(graficaAltitud);
 		graficas.add(graficaHR);
 		graficas.add(graficaCadencia);
 		graficas.add(graficaVelocidad);
+		graficas.add(graficaPaso);
 		graficas.add(graficaPendiente);
 		graficas.add(graficaPotencia);
 		
@@ -152,9 +155,19 @@ public class PanelGrafico extends JPanel implements ChartMouseListener, AxisChan
 	public void update(DatosActividad datosActividad)  {
 		this.datosActividad = datosActividad;
 		crearPopupMenu();
-		for (int i=0; i< graficas.size(); i++) plotPrincipal.remove(graficas.get(i).getPlot());
-		for (int i=0; i< graficas.size(); i++) if(graficas.get(i).isVisible()) plotPrincipal.add(graficas.get(i).getPlot());
+		refrescaVisibilidad();
 		update();
+	}
+	
+	private void refrescaVisibilidad()  {
+		for (int i=0; i< graficas.size(); i++) plotPrincipal.remove(graficas.get(i).getPlot());
+		if(graficaAltitud.isVisible()) plotPrincipal.add(graficaAltitud.getPlot());
+		if(graficaHR.isVisible()) plotPrincipal.add(graficaHR.getPlot());
+		if(graficaCadencia.isVisible()) plotPrincipal.add(graficaCadencia.getPlot());
+		if(graficaVelocidad.isVisible() && !datosActividad.getTrack().getTipoActividad().isPaso()) plotPrincipal.add(graficaVelocidad.getPlot());
+		if(graficaPaso.isVisible() && datosActividad.getTrack().getTipoActividad().isPaso()) plotPrincipal.add(graficaPaso.getPlot());
+		if(graficaPendiente.isVisible()) plotPrincipal.add(graficaPendiente.getPlot());
+		if(graficaPotencia.isVisible()) plotPrincipal.add(graficaPotencia.getPlot());
 	}
 	
 	public void update()  {
@@ -169,7 +182,7 @@ public class PanelGrafico extends JPanel implements ChartMouseListener, AxisChan
 		grafico.getXYPlot().setDomainAxis(eje);
 		
 		graficaAltitud.update(datosActividad, datosActividad.getDatosGrafica(ejeX).getDatosAltitud());
-		if (datosActividad.getTrack().getTipoActividad().isPaso()) graficaVelocidad.update(datosActividad, datosActividad.getDatosGrafica(ejeX).getDatosPaso());
+		if (datosActividad.getTrack().getTipoActividad().isPaso()) graficaPaso.update(datosActividad, datosActividad.getDatosGrafica(ejeX).getDatosPaso());
 		else graficaVelocidad.update(datosActividad, datosActividad.getDatosGrafica(ejeX).getDatosVelocidad());
 		graficaHR.update(datosActividad, datosActividad.getDatosGrafica(ejeX).getDatosHR());
 		graficaCadencia.update(datosActividad, datosActividad.getDatosGrafica(ejeX).getDatosCadencia());
@@ -195,7 +208,7 @@ public class PanelGrafico extends JPanel implements ChartMouseListener, AxisChan
 			graficaAltitud.setValorSeleccionado(valorX, UtilidadesFormat.getIntegerFormat().format(trackPoint.getAltitud()) + " m");
 			graficaHR.setValorSeleccionado(valorX, UtilidadesFormat.getIntegerFormat().format(trackPoint.getHR()) + " bpm");
 			graficaCadencia.setValorSeleccionado(valorX, UtilidadesFormat.getIntegerFormat().format(trackPoint.getCadencia()));    
-			if (datosActividad.getTrack().getTipoActividad().isPaso()) graficaVelocidad.setValorSeleccionado(valorX, UtilidadesFormat.getPasoFormat().format(datosActividad.getPaso(datosActividad.getPuntoSeleccionado())) + " min/km");        
+			if (datosActividad.getTrack().getTipoActividad().isPaso()) graficaPaso.setValorSeleccionado(valorX, UtilidadesFormat.getPasoFormat().format(datosActividad.getPaso(datosActividad.getPuntoSeleccionado())) + " min/km");        
 			else graficaVelocidad.setValorSeleccionado(valorX, UtilidadesFormat.getDecimalFormat().format(datosActividad.getVelocidad(datosActividad.getPuntoSeleccionado())) + " km/h");        
 			graficaPendiente.setValorSeleccionado(valorX, UtilidadesFormat.getPercentFormat().format(datosActividad.getPendiente(datosActividad.getPuntoSeleccionado())));        
 			graficaPotencia.setValorSeleccionado(valorX, UtilidadesFormat.getIntegerFormat().format(trackPoint.getPotencia()) + " W");        
@@ -205,8 +218,7 @@ public class PanelGrafico extends JPanel implements ChartMouseListener, AxisChan
 	}
 	
 	public void updateConfiguracion()  {
-   		for (int i=0; i< graficas.size(); i++) plotPrincipal.remove(graficas.get(i).getPlot());
-   		for (int i=0; i< graficas.size(); i++) if(graficas.get(i).isVisible()) plotPrincipal.add(graficas.get(i).getPlot());
+		refrescaVisibilidad();
    		update();
 	}
 	

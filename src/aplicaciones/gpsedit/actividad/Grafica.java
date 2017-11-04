@@ -2,11 +2,15 @@ package aplicaciones.gpsedit.actividad;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.time.format.FormatStyle;
 
+import org.apache.commons.lang3.text.FormattableUtils;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.jfree.chart.annotations.XYLineAnnotation;
 import org.jfree.chart.annotations.XYTextAnnotation;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYAreaRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
@@ -18,6 +22,7 @@ import aplicaciones.gpsedit.beans.DatosGraficaBean;
 import aplicaciones.gpsedit.config.Configuracion;
 import aplicaciones.gpsedit.config.ConfiguracionEjeRango;
 import aplicaciones.gpsedit.config.ConfiguracionGraficas;
+import aplicaciones.gpsedit.util.UtilidadesFormat;
 
 public class Grafica{
 
@@ -37,7 +42,7 @@ public class Grafica{
 	
 	XYSeries serie = new XYSeries("Altitud");
 
-	Grafica(String titulo, ConfiguracionEjeRango configuracion)  {
+	Grafica(String titulo, ConfiguracionEjeRango configuracion, ValueAxis eje)  {
 		this.configuracion = configuracion;
 		this.configuracionGraficas = Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas();
 		this.titulo = titulo;
@@ -48,13 +53,24 @@ public class Grafica{
 		annotationLine = new XYLineAnnotation(0, 0, 0, 0);
 		plot = new XYPlot();
 		plot.setDomainCrosshairVisible(false);
-		NumberAxis rangeAxis = new NumberAxis(titulo);
-		rangeAxis.setAutoRangeIncludesZero(false);
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		rangeAxis.setAutoRange(true);
-		rangeAxis.setUpperMargin(.15);
-		rangeAxis.setLowerMargin(.15);
-		plot.setRangeAxis(rangeAxis);
+		if (eje instanceof NumberAxis) {
+			NumberAxis rangeAxis = (NumberAxis)eje;
+			rangeAxis.setAutoRangeIncludesZero(false);
+			rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+			rangeAxis.setAutoRange(true);
+			rangeAxis.setUpperMargin(.15);
+			rangeAxis.setLowerMargin(.15);			
+		}
+		if (eje instanceof DateAxis) {
+			DateAxis rangeAxis = (DateAxis)eje;
+			rangeAxis.setDateFormatOverride(UtilidadesFormat.getPasoFormat());
+			//rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+			rangeAxis.setAutoRange(true);
+			rangeAxis.setUpperMargin(.15);
+			rangeAxis.setLowerMargin(.15);			
+		}
+		eje.setLabel(titulo);
+		plot.setRangeAxis(eje);
 		
 		plot.setBackgroundPaint(Color.WHITE);
 		plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
