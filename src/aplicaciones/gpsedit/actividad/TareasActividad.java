@@ -86,7 +86,8 @@ public class TareasActividad extends SwingWorker<String, Object> {
 		 			resetTrack(puntoRetorno);
 	
 		 		}
-			}				
+			}		
+			
 			if (ConstantesAcciones.SET_ALTITUD.equalsIgnoreCase(accion)) {
 				try {
 					String valor = JOptionPane.showInputDialog("Nuevo valor de altitud");
@@ -169,7 +170,6 @@ public class TareasActividad extends SwingWorker<String, Object> {
 			setProgress(100);
 			JOptionPane.showMessageDialog(null, "No se ha podido realizar el cambio");
 		}
-
 		return "";
 	}
 	
@@ -196,7 +196,7 @@ public class TareasActividad extends SwingWorker<String, Object> {
 
 	
     public void done() {
-		GPSEdit.logger.debug("Done");
+		GPSEdit.logger.debug("Done " + accion);
     }
 
 }

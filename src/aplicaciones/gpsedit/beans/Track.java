@@ -179,10 +179,10 @@ public class Track {
 
 	public Track clone()  {
 		Track track = new Track();
-		track.setAutor(autor.clone());
+		if (autor != null) track.setAutor(autor.clone());
 		track.setCalorias(calorias);
 		track.setDescripcion(descripcion);
-		track.setDispositivo(dispositivo.clone());
+		if (dispositivo != null) track.setDispositivo(dispositivo.clone());
 		track.setFichero(new File(fichero.getAbsolutePath()));
 		track.setGrabado(grabado);
 		track.setAltitud(altitud);

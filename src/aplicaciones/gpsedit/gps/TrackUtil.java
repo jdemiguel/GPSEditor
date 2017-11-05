@@ -249,23 +249,6 @@ public class TrackUtil {
 		track.setTipo(rawTrack.getTipo());
 
 		track.setTipoActividad(rawTrack.getTipoActividad());
-		if (rawTrack.getTipoActividad() == null) {
-			TipoActividad actividades[] = {
-					TipoActividad.RUNNING, TipoActividad.CICLISMO_CARRETERA,
-					TipoActividad.CICLISMO_MTB, TipoActividad.CICLISMO_INTERIOR, 
-					TipoActividad.SENDERISMO, TipoActividad.ESQUI, 
-					TipoActividad.NATACION
-					};
-			TipoActividad tipo =  (TipoActividad) JOptionPane.showInputDialog(null,
-					"Selecciona el tipo de Actividad",
-	                "Tipo de Actividad",
-	                JOptionPane.PLAIN_MESSAGE,
-	                null,
-	                actividades,
-	                TipoActividad.RUNNING);
-			if (tipo == null) tipo = TipoActividad.OTROS;
-			track.setTipoActividad(tipo);
-		}
 		
 		return track;
 	}

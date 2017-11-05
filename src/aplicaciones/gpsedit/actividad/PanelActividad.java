@@ -118,6 +118,7 @@ public class PanelActividad extends JPanel implements ActionListener{
 	public void update(DatosActividad datosActividad) {
 		this.datosActividad = datosActividad;
 		dialogoProgreso.setDatosActividad(datosActividad);
+
 		Track track = datosActividad.getTrack();
 		if (!track.isHr()) {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeHR().setVisible(false);
@@ -235,7 +236,32 @@ public class PanelActividad extends JPanel implements ActionListener{
 		}    
     	if (ConstantesAcciones.CAMBIO_TRACK.equalsIgnoreCase(evento.getActionCommand()))  {
 			update(datosActividad);
-    	}    	    	
+    	}    	
+    	if (ConstantesAcciones.SET_NOMBRE.equalsIgnoreCase(evento.getActionCommand())) {
+ 			datosActividad.setNombre();
+ 			update(datosActividad);	
+ 		}	
+    	if (ConstantesAcciones.SET_DESCRIPCION.equalsIgnoreCase(evento.getActionCommand())) {
+			datosActividad.setDescripcion();
+			update(datosActividad);	
+		}	
+    	if (ConstantesAcciones.SET_TIPO.equalsIgnoreCase(evento.getActionCommand())) {
+			datosActividad.setTipoActividad();
+			update(datosActividad);	
+		}	
+    	if (ConstantesAcciones.SET_FECHA.equalsIgnoreCase(evento.getActionCommand())) {
+			datosActividad.setFecha();
+			update(datosActividad);	
+		}	
+    	if (ConstantesAcciones.SET_DISPOSITIVO.equalsIgnoreCase(evento.getActionCommand())) {
+			datosActividad.setDispositivo();
+			update(datosActividad);	
+		}	
+    	
+    	
+    	if (ConstantesAcciones.CAMBIO_TRACK.equalsIgnoreCase(evento.getActionCommand()))  {
+			update(datosActividad);
+    	}  
 	}
 
 	public DialogProgreso getDialogoProgreso() {

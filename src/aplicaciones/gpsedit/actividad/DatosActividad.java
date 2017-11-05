@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
@@ -12,8 +14,10 @@ import aplicaciones.gpsedit.GPSEdit;
 import aplicaciones.gpsedit.beans.ActividadBean;
 import aplicaciones.gpsedit.beans.DatosSegmentoBean;
 import aplicaciones.gpsedit.beans.DatosTodasGraficasBean;
+import aplicaciones.gpsedit.beans.Dispositivo;
 import aplicaciones.gpsedit.beans.Seccion;
 import aplicaciones.gpsedit.beans.SegmentoCoeficiente;
+import aplicaciones.gpsedit.beans.TipoActividad;
 import aplicaciones.gpsedit.beans.Track;
 import aplicaciones.gpsedit.beans.TrackPoint;
 import aplicaciones.gpsedit.config.Configuracion;
@@ -40,7 +44,6 @@ public class DatosActividad {
 		this.actividadBean.setFinRango(track.getPuntos().size() - 1);
 		this.actividadBean.setPuntoSeleccionado(0);
 		this.datosTrack = getDatos(0, track.getPuntos().size()-1);
-
 	}
 
 	
@@ -668,7 +671,53 @@ public class DatosActividad {
 		}
 	}
 	
+	public void setTipoActividad()  {
+		TipoActividad actividades[] = {
+			TipoActividad.RUNNING, TipoActividad.CICLISMO_CARRETERA,
+			TipoActividad.CICLISMO_MTB, TipoActividad.CICLISMO_INTERIOR, 
+			TipoActividad.SENDERISMO, TipoActividad.ESQUI, 
+			TipoActividad.NATACION
+		};
+		TipoActividad tipo =  (TipoActividad) JOptionPane.showInputDialog(null,
+			"Selecciona el tipo de Actividad",
+            "Tipo de Actividad",
+            JOptionPane.PLAIN_MESSAGE,
+            null,
+            actividades,
+            (getTrack().getTipo() != null)?getTrack().getTipo():TipoActividad.RUNNING);
+		if (tipo == null) tipo = TipoActividad.OTROS;
+		getTrack().setTipoActividad(tipo);
+	}
 	
+	public void setNombre()  {
+		String nombre =  JOptionPane.showInputDialog("Nombre de la Actividad", getTrack().getNombre());
+		if (nombre != null && nombre.length() > 0) {
+			getTrack().setNombre(nombre);
+		}
+	}
+	
+	public void setDescripcion()  {
+		String descripcion =  JOptionPane.showInputDialog("Descripción", getTrack().getDescripcion());
+		if (descripcion != null && descripcion.length() > 0) {
+			getTrack().setDescripcion(descripcion);
+		}
+	}
+	
+	public void setFecha()  {
+
+	}
+	
+	public void setDispositivo()  {
+		Dispositivo dispositivos[] = new Dispositivo[3];
+		dispositivos[0] = new Dispositivo("Polar M400", 1, 0);
+		dispositivos[1] = new Dispositivo("Polar V650", 1, 0);
+		dispositivos[2] = new Dispositivo("GH-625", 1, 0);
+		Dispositivo dispositivo =  (Dispositivo) JOptionPane.showInputDialog(null, "Selecciona el dispositivo", "", JOptionPane.PLAIN_MESSAGE, null, dispositivos, getTrack().getDispositivo());
+		if (dispositivo != null)  {
+			getTrack().setDispositivo(dispositivo);
+		}
+	}
+
 	
 	public void resetDatosGraficas()  {
 		datosGraficasDistancia = null;

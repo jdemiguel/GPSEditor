@@ -14,7 +14,6 @@ import aplicaciones.gpsedit.actividad.PanelActividad;
 public class EditMenu extends JMenu{
 	
 	private static final long serialVersionUID = 716310743424732893L;
-
 	public EditMenu(PanelActividad panelActividad) {
 		DialogProgreso dialogProgreso = panelActividad.getDialogoProgreso();
 		setText("Edición");
@@ -29,6 +28,29 @@ public class EditMenu extends JMenu{
 		jmenuItem.addActionListener(dialogProgreso);
 		add(jmenuItem);	
 		addSeparator();
+		JMenu menuMetadatos = new JMenu("Cambiar metadatos");
+		jmenuItem = new JMenuItem("Nombre");
+		jmenuItem.setActionCommand(ConstantesAcciones.SET_NOMBRE);
+		jmenuItem.addActionListener(panelActividad);
+		menuMetadatos.add(jmenuItem);
+		jmenuItem = new JMenuItem("Descripción");
+		jmenuItem.setActionCommand(ConstantesAcciones.SET_DESCRIPCION);
+		jmenuItem.addActionListener(panelActividad);
+		menuMetadatos.add(jmenuItem);
+		jmenuItem = new JMenuItem("Tipo de actividad");
+		jmenuItem.setActionCommand(ConstantesAcciones.SET_TIPO);
+		jmenuItem.addActionListener(panelActividad);
+		menuMetadatos.add(jmenuItem);
+		jmenuItem = new JMenuItem("Fecha y hora");
+		jmenuItem.setActionCommand(ConstantesAcciones.SET_FECHA);
+		jmenuItem.addActionListener(panelActividad);
+		menuMetadatos.add(jmenuItem);
+		jmenuItem = new JMenuItem("Dispositivo");
+		jmenuItem.setActionCommand(ConstantesAcciones.SET_DISPOSITIVO);
+		jmenuItem.addActionListener(panelActividad);
+		menuMetadatos.add(jmenuItem);
+		add(menuMetadatos);
+		
 		JMenu menuBorrado = new JMenu("Borrar");
 		jmenuItem = new JMenuItem("Todos los puntos seleccionados");
 		jmenuItem.setActionCommand(ConstantesAcciones.DELETE_ALL);

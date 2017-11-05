@@ -184,6 +184,7 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 			GPSParser parser = GPSParserFactory.getParser(tipo);
 			Track track = TrackUtil.toTrack(parser.parse(fichero));
 			datosActividad = new DatosActividad(track);
+			if (datosActividad.getTrack().getTipoActividad() == null) datosActividad.setTipoActividad();
 	        panelActividad.update(datosActividad);
 			panelActividad.setVisible(true);
 		} catch (Exception e) {

@@ -29,7 +29,7 @@ public class DialogConfiguracionSecciones extends JDialog implements ActionListe
 	private JRadioButton tiempoMovimiento;
 	private JRadioButton tiempoAbsoluto;
 	private JRadioButton hora;
-	private JComboBox intervalo;
+	private JComboBox<Item> intervalo;
 	private ConfiguracionSecciones configuracion;
 	
 	
@@ -68,7 +68,7 @@ public class DialogConfiguracionSecciones extends JDialog implements ActionListe
 		variableDominio.add(tiempoAbsoluto);
 		variableDominio.add(hora);
 		
-		intervalo = new JComboBox();
+		intervalo = new JComboBox<Item>();
 
 		panelSeccionesAutomaticas.add(UtilidadesSwing.createBloque2x1("Dist.", distancia, "Tmp. abs", tiempoAbsoluto, BorderFactory.createEmptyBorder()));
 		panelSeccionesAutomaticas.add(UtilidadesSwing.createBloque2x1("Hora", hora, "Tmp. mov", tiempoMovimiento, BorderFactory.createEmptyBorder()));

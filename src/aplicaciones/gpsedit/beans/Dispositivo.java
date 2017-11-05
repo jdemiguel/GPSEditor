@@ -1,6 +1,6 @@
 package aplicaciones.gpsedit.beans;
 
-public class Dispositivo {
+public class Dispositivo implements Cloneable{
 	private String name = "";
 	private Long unitId = null;
 	private Long productID = null;
@@ -8,6 +8,15 @@ public class Dispositivo {
 	private Long versionMinor = null;
 	private Long buildMajor = null;
 	private Long buildMinor = null;
+	
+	public Dispositivo(String name, long versionMajor, long versionMinor) {
+		this.name = name;
+		this.versionMajor = versionMajor;
+		this.versionMinor = versionMinor;
+	}
+	
+	public Dispositivo() {
+	}
 	
 	public String getName() {
 		return name;

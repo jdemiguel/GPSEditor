@@ -84,5 +84,12 @@ public class ConstantesAcciones {
 	public final static String DELETE_PARADAS = "DELETE_PARADAS";
 	public final static String DESHACER = "DESHACER";
 	public final static String REHACER = "REHACER";
+	
+	public final static String SET_NOMBRE = "SET_NOMBRE";
+	public final static String SET_TIPO = "SET_TIPO";
+	public final static String SET_DESCRIPCION = "SET_DESCRIPCION";
+	public final static String SET_FECHA = "SET_FECHA";
+	public final static String SET_DISPOSITIVO = "SET_DISPOSITIVO";
+
 
 }
