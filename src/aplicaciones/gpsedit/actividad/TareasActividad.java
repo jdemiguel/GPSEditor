@@ -24,7 +24,7 @@ public class TareasActividad extends SwingWorker<String, Object> {
 		ActividadBean puntoRetorno = datosActividad.getActividadBean().clone();
 		try {
 			if (ConstantesAcciones.DELETE_ALL.equalsIgnoreCase(accion)) {
-		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los puntos seleccionados") == JOptionPane.OK_OPTION) {
+		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los puntos seleccionados", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 		 			try {
 		 				setProgress(1);
 		 				datosActividad.borraSegmento();
@@ -37,42 +37,42 @@ public class TareasActividad extends SwingWorker<String, Object> {
 		 		}
 			}
 			if (ConstantesAcciones.DELETE_ALTITUD.equalsIgnoreCase(accion)) {
-		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de altitud de los puntos seleccionados?") == JOptionPane.OK_OPTION) {
+		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de altitud de los puntos seleccionados?", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 	 				setProgress(1);
 		 			datosActividad.borraAltitud();
 		 			resetTrack(puntoRetorno);
 		 		}
 			}
 			if (ConstantesAcciones.DELETE_CADENCIA.equalsIgnoreCase(accion)) {
-		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de cadencia de los puntos seleccionados?") == JOptionPane.OK_OPTION) {
+		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de cadencia de los puntos seleccionados?", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 	 				setProgress(1);
 		 			datosActividad.borraCadencia();
 		 			resetTrack(puntoRetorno);
 		 		}
 			}
 			if (ConstantesAcciones.DELETE_GPS.equalsIgnoreCase(accion)) {
-		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de GPS de los puntos seleccionados?") == JOptionPane.OK_OPTION) {
+		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de GPS de los puntos seleccionados?", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 	 				setProgress(1);
 		 			datosActividad.borraGPS();
 		 			resetTrack(puntoRetorno);
 		 		}
 			}
 			if (ConstantesAcciones.DELETE_HR.equalsIgnoreCase(accion)) {
-		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de pulsaciones de los puntos seleccionados?") == JOptionPane.OK_OPTION) {
+		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de pulsaciones de los puntos seleccionados?", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 	 				setProgress(1);
 		 			datosActividad.borraHR();
 		 			resetTrack(puntoRetorno);
 		 		}
 			}				
 			if (ConstantesAcciones.DELETE_POTENCIA.equalsIgnoreCase(accion)) {
-		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de potencia de los puntos seleccionados?") == JOptionPane.OK_OPTION) {
+		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de potencia de los puntos seleccionados?", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 	 				setProgress(1);
 		 			datosActividad.borraPotencia();
 		 			resetTrack(puntoRetorno);
 		 		}
 			}		
 			if (ConstantesAcciones.DELETE_VELOCIDAD.equalsIgnoreCase(accion)) {
-		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de velocidad de los puntos seleccionados?\n En ese caso los datos de velocidad serán recalculados a partir de los datos GPS si los hay") == JOptionPane.OK_OPTION) {
+		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los datos de velocidad de los puntos seleccionados?\n En ese caso los datos de velocidad serán recalculados a partir de los datos GPS si los hay", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 	 				setProgress(1);
 		 			datosActividad.borraVelocidad();
 		 			resetTrack(puntoRetorno);
@@ -80,7 +80,7 @@ public class TareasActividad extends SwingWorker<String, Object> {
 		 		}
 			}	
 			if (ConstantesAcciones.DELETE_PARADAS.equalsIgnoreCase(accion)) {
-		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los tiempos de parada de los puntos seleccionados?") == JOptionPane.OK_OPTION) {
+		 		if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar los tiempos de parada de los puntos seleccionados?", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 	 				setProgress(1);
 		 			datosActividad.borraParadas();
 		 			resetTrack(puntoRetorno);

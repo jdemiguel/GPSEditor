@@ -1,10 +1,12 @@
 package aplicaciones.gpsedit.actividad;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.math3.analysis.UnivariateFunction;
@@ -704,7 +706,12 @@ public class DatosActividad {
 	}
 	
 	public void setFecha()  {
-
+		DialogSelectorFecha selectorFecha = new DialogSelectorFecha(this);
+		selectorFecha.setVisible(true);
+	}
+	
+	public void setFecha(Date fecha)  {
+		GPSEdit.logger.debug("Fecha:" + fecha.toString());
 	}
 	
 	public void setDispositivo()  {

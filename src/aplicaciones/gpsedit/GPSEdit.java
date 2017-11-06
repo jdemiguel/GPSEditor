@@ -236,7 +236,7 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 	 */
 	private boolean checkExiste (File fichero) {
 		if (!fichero.exists() || datosActividad.getTrack().isGrabado()) return true;
-		return (JOptionPane.showConfirmDialog(null, "El fichero existe. ¿Quiere sobreescribirlo?") == JOptionPane.OK_OPTION);
+		return (JOptionPane.showConfirmDialog(null, "El fichero existe. ¿Quiere sobreescribirlo?", "Fichero existe", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION);
 	}
 	
 	private void guardar(File fichero, String tipo)  {
