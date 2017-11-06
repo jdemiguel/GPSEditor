@@ -2,9 +2,7 @@ package aplicaciones.gpsedit.actividad;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.time.format.FormatStyle;
 
-import org.apache.commons.lang3.text.FormattableUtils;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.jfree.chart.annotations.XYLineAnnotation;
 import org.jfree.chart.annotations.XYTextAnnotation;

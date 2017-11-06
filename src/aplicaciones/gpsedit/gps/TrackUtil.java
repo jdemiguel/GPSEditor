@@ -3,14 +3,11 @@ package aplicaciones.gpsedit.gps;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import aplicaciones.gpsedit.GPSEdit;
 import aplicaciones.gpsedit.beans.RawSeccion;
 import aplicaciones.gpsedit.beans.RawTrack;
 import aplicaciones.gpsedit.beans.RawTrackPoint;
 import aplicaciones.gpsedit.beans.Seccion;
-import aplicaciones.gpsedit.beans.TipoActividad;
 import aplicaciones.gpsedit.beans.Track;
 import aplicaciones.gpsedit.beans.TrackPoint;
 import aplicaciones.gpsedit.config.Configuracion;

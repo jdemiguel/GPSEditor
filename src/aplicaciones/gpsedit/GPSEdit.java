@@ -286,13 +286,6 @@ public class GPSEdit extends javax.swing.JFrame implements Runnable, ActionListe
 	}
 	
 
-	
-	public void processKeyEvent(KeyEvent evento)  {
-		if (evento.getID() == KeyEvent.KEY_RELEASED)  {
-			int codigo = evento.getKeyCode();
-
-		}
-	}
 
 
    

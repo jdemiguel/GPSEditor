@@ -18,10 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.event.MouseInputListener;
 
@@ -38,7 +35,6 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.LocalResponseCache;
 import org.jxmapviewer.viewer.TileFactory;
 import org.jxmapviewer.viewer.TileFactoryInfo;
-import org.jxmapviewer.viewer.bmng.SLMapServerInfo;
 
 import aplicaciones.gpsedit.ConstantesAcciones;
 import aplicaciones.gpsedit.beans.TrackPoint;

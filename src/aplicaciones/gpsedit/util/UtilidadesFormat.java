@@ -14,6 +14,7 @@ public class UtilidadesFormat {
     private static SimpleDateFormat tiempoFormat = new SimpleDateFormat ("HH:mm:ss");
 	private static SimpleDateFormat fechaFormat = new SimpleDateFormat ("dd/MM/yy HH:mm");
 	private static SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm");
+	private static SimpleDateFormat horaCompletaFormat = new SimpleDateFormat("HH:mm:ss");
     private static SimpleDateFormat msFormat = new SimpleDateFormat ("HH:mm:ss.S");
 
 	static  {
@@ -27,7 +28,6 @@ public class UtilidadesFormat {
 	    tiempoFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	    pasoFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	    horaFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-	    msFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 	
 	public static NumberFormat getPercentFormat() {
@@ -68,6 +68,10 @@ public class UtilidadesFormat {
 
 	public static SimpleDateFormat getMsFormat() {
 		return msFormat;
+	}
+
+	public static SimpleDateFormat getHoraCompletaFormat() {
+		return horaCompletaFormat;
 	}
 	
 

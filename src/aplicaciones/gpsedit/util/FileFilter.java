@@ -7,6 +7,7 @@ package aplicaciones.gpsedit.util;
 import java.io.File;
 import java.util.ArrayList;
 
+@SuppressWarnings("rawtypes")
 public class FileFilter extends javax.swing.filechooser.FileFilter {
 
 	private ArrayList extensiones;
@@ -20,6 +21,7 @@ public class FileFilter extends javax.swing.filechooser.FileFilter {
 	 * añade una extension permitida
 	 * @param extension
 	 */
+	@SuppressWarnings("unchecked")
 	public void addExtension(String extension)  {
 		extensiones.add(extension);
 	}

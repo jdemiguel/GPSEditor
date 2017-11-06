@@ -137,8 +137,8 @@ public class PanelDatosSegmento extends JPanel implements ActionListener{
 		puntoFinalDistancia.setValor(UtilidadesFormat.getFloatFormat().format((float)datosSegmento.getDistanciaFinal() / 1000) + " km");
 		puntoInicioTiempo.setValor(UtilidadesFormat.getTiempoFormat().format(new Date(datosSegmento.getTiempoInicial())));
 		puntoFinalTiempo.setValor(UtilidadesFormat.getTiempoFormat().format(new Date(datosSegmento.getTiempoFinal())));
-		puntoInicioHora.setValor(UtilidadesFormat.getTiempoFormat().format(datosSegmento.getHoraInicio()));
-		puntoFinalHora.setValor(UtilidadesFormat.getTiempoFormat().format(datosSegmento.getHoraFin()));
+		puntoInicioHora.setValor(UtilidadesFormat.getHoraCompletaFormat().format(datosSegmento.getHoraInicio()));
+		puntoFinalHora.setValor(UtilidadesFormat.getHoraCompletaFormat().format(datosSegmento.getHoraFin()));
 		tiempoAbsolutoLabel.setValor(UtilidadesFormat.getTiempoFormat().format(datosSegmento.getTiempoAbsoluto()) + " horas");
 		tiempoMovimientoLabel.setValor(UtilidadesFormat.getTiempoFormat().format(datosSegmento.getTiempoMovimiento()) + " horas");
 		longitudLabel.setValor(UtilidadesFormat.getFloatFormat().format(datosSegmento.getLongitud() / 1000.0) + " km");
