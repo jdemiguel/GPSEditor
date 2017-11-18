@@ -2,6 +2,7 @@ package aplicaciones.gpsedit.actividad;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,6 +12,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import aplicaciones.gpsedit.ConstantesAcciones;
+import aplicaciones.gpsedit.GPSEdit;
 import aplicaciones.gpsedit.beans.Track;
 import aplicaciones.gpsedit.config.Configuracion;
 import aplicaciones.gpsedit.config.DialogConfiguracionCoeficientes;
@@ -47,12 +49,17 @@ public class PanelActividad extends JPanel implements ActionListener{
 	private JLabel tituloLabel;
 	
 	public PanelActividad() {
-		setBounds(0,0,1300,768);
+		
+		Dimension tamPantalla = Toolkit.getDefaultToolkit().getScreenSize();
+		Double ancho = tamPantalla.getWidth();
+		Double alto = tamPantalla.getHeight();
+		
+		setBounds(0, 0, ancho.intValue(), alto.intValue());
 		setLayout(null);
-
+		
 
 		JPanel panelTitulo = new JPanel();
-		panelTitulo.setBounds(0,0,1300,25);
+		panelTitulo.setBounds(0, 0, ancho.intValue(), 25);
 		panelTitulo.setLayout(new GridLayout(1,1));
         JPanel panelInterior = new JPanel();
         tituloLabel = new JLabel("");
@@ -103,22 +110,31 @@ public class PanelActividad extends JPanel implements ActionListener{
 
 		
 		JSplitPane splitPane = new JSplitPane();
-		splitPane.setBounds(0, 25, 1300, 743);
+		splitPane.setBounds(0, 25, ancho.intValue(), alto.intValue() - 60);
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		
 		splitPane.setTopComponent(panelesPrincipales);		
 		splitPane.setBottomComponent(panelesDatos);
 		add(splitPane);
 		
-		panelesPrincipales.setMinimumSize(new Dimension(1300, 330));
-		panelesDatos.setMinimumSize(new Dimension(1300, 140));
+		panelesPrincipales.setMinimumSize(new Dimension(ancho.intValue(), 330));
+		panelesDatos.setMinimumSize(new Dimension(ancho.intValue(), 140));
 		splitPane.setDividerLocation(.8);
 	}
 
+	public void resize()  {
+		Dimension tamPantalla = GPSEdit.getInstance().getSize();
+		Double ancho = tamPantalla.getWidth();
+		Double alto = tamPantalla.getHeight();
+		
+		setBounds(0, 0, ancho.intValue(), alto.intValue());
+	}
+	
 	public void update(DatosActividad datosActividad) {
 		this.datosActividad = datosActividad;
 		dialogoProgreso.setDatosActividad(datosActividad);
 
+		resize();
 		Track track = datosActividad.getTrack();
 		if (!track.isHr()) {
 			Configuracion.getInstance().getConfiguracionActividad().getConfiguracionGraficas().getEjeHR().setVisible(false);

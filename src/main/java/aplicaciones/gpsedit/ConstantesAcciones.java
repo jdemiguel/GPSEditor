@@ -10,7 +10,6 @@ public class ConstantesAcciones {
 	public final static String MENU_CERRAR = "MENU_CERRAR";
 	public final static String MENU_SALIR = "MENU_SALIR";
 	
-	
 	/*Constantes Actividad*/
 
 	public static final String CAMBIO_CONFIGURACION_GRAFICAS = "CAMBIO_CONFIGURACION_GRAFICAS";

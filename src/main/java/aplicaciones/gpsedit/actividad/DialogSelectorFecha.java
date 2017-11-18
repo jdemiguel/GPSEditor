@@ -5,13 +5,14 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-
-import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JSpinnerDateEditor;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 
 import aplicaciones.gpsedit.ConstantesAcciones;
 import aplicaciones.gpsedit.GPSEdit;
@@ -21,7 +22,7 @@ public class DialogSelectorFecha extends JDialog implements ActionListener{
 
 	private static final long serialVersionUID = 7539948379642608644L;
 	private DatosActividad datosActividad;
-	private JDateChooser dateChooser;
+	private JSpinner hora;
 
 	
 	public DialogSelectorFecha(DatosActividad datosActividad) {
@@ -35,8 +36,13 @@ public class DialogSelectorFecha extends JDialog implements ActionListener{
 		panelPrincipal.setBounds(0, 0, 280, 240);
 		panelPrincipal.setBackground(UtilidadesSwing.COLOR_FONDO);
 
-		dateChooser = new JDateChooser(null, datosActividad.getTrack().getPrimero().getHora(), "dd/MM/yyyy", new JSpinnerDateEditor());
-		panelPrincipal.add(dateChooser);
+		SpinnerDateModel smb = new SpinnerDateModel(datosActividad.getTrack().getPrimero().getHora(), null, null, Calendar.MINUTE);
+		hora = new JSpinner(smb);		
+		
+		JSpinner.DateEditor d = new JSpinner.DateEditor(hora, "dd/MM/yyyy HH:mm:ss");
+		hora.setEditor(d);
+		
+		panelPrincipal.add(hora);
 		
 		JPanel botones = new JPanel();
 		botones.setBounds(0, 240, 280, 40);
@@ -60,11 +66,9 @@ public class DialogSelectorFecha extends JDialog implements ActionListener{
 	
 	public void actionPerformed(ActionEvent evento) {
     	if (ConstantesAcciones.ACEPTAR.equalsIgnoreCase(evento.getActionCommand()))  {
-    		GPSEdit.logger.debug("Fecha1:" + dateChooser.getDate().toString());
-    		GPSEdit.logger.debug("Fecha2:" + dateChooser.getDateEditor().getDate().toString());
-    		GPSEdit.logger.debug("Fecha3:" + dateChooser.getJCalendar().getDate().toString());
+    		GPSEdit.logger.debug("Fecha1:" + (Date) hora.getValue());
 
-    		datosActividad.setFecha(dateChooser.getJCalendar().getDate());
+    		datosActividad.setFecha((Date) hora.getValue());
 			setVisible(false);
 		}
     	if (ConstantesAcciones.CANCELAR.equalsIgnoreCase(evento.getActionCommand()))  {

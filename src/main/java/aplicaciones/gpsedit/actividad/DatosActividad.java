@@ -710,7 +710,8 @@ public class DatosActividad {
 	
 	public void setFecha(Date fecha)  {
 		long incremento = fecha.getTime() - getTrack().getPrimero().getHora().getTime();
-		for (TrackPoint punto:getTrack().getPuntos()) punto.setHora(new Date(punto.getHora().getTime() + incremento));
+		for (TrackPoint punto:getTrack().getPuntos()) punto.setHora(new Date(punto.getHora().getTime() + incremento));	
+		resetDatosGraficas();
 		GPSEdit.logger.debug("Fecha:" + fecha.toString());
 	}
 	
